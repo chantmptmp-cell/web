@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>幼兒英文單字多感官學習遊戲 (自選提示模式版)</title>
+  <title>幼兒英文單字多感官學習遊戲 (部分提示進階版)</title>
   <style>
     * {
       box-sizing: border-box;
@@ -70,13 +70,12 @@
       font-size: 15px;
     }
     .hint-options {
-      display: flex;
-      justify-content: space-around;
-      gap: 6px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
     }
     .hint-btn {
-      flex: 1;
-      padding: 8px 4px;
+      padding: 10px 6px;
       font-size: 13px;
       font-weight: bold;
       border: 2px solid #ced4da;
@@ -181,11 +180,11 @@
       border-radius: 8px 8px 0 0;
       transition: all 0.2s;
     }
-    /* 選擇字母虛線提示時的半透明樣式 */
+    /* 虛線提示樣式 */
     .slot.show-trace {
       color: rgba(25, 113, 194, 0.25);
     }
-    /* 填充後的樣式 */
+    /* 填充後的深色樣式 */
     .slot.filled {
       color: #1971c2 !important;
       background-color: #e7f5ff;
@@ -251,9 +250,10 @@
 
       <!-- 提示模式選擇器 -->
       <div class="hint-selector-box">
-        <label>💡 請選擇學習提示模式：</label>
+        <label>💡 請選擇提示輔助模式：</label>
         <div class="hint-options">
-          <button class="hint-btn active" onclick="setHintMode('trace', this)">🔤 字母虛線提示</button>
+          <button class="hint-btn active" onclick="setHintMode('trace', this)">🔤 全字母虛線</button>
+          <button class="hint-btn" onclick="setHintMode('partial', this)">🧩 部分字母虛線</button>
           <button class="hint-btn" onclick="setHintMode('audio', this)">🔊 純語音提示</button>
           <button class="hint-btn" onclick="setHintMode('none', this)">🎯 無提示挑戰</button>
         </div>
@@ -263,291 +263,4 @@
         <button class="level-btn lvl-1" onclick="startLevel(1)">Level 1: 幼兒入門 (3字母) <span>50題</span></button>
         <button class="level-btn lvl-2" onclick="startLevel(2)">Level 2: 基礎進階 (4字母) <span>55題</span></button>
         <button class="level-btn lvl-3" onclick="startLevel(3)">Level 3: 中級探索 (5字母) <span>50題</span></button>
-        <button class="level-btn lvl-4" onclick="startLevel(4)">Level 4: 高級挑戰 (6+字母) <span>50題</span></button>
-        <button class="level-btn lvl-5" onclick="startLevel(5)">Level 5: 英語小達人 (綜合) <span>50題</span></button>
-      </div>
-    </div>
-
-    <!-- 遊戲畫面 -->
-    <div id="gameScreen" style="display: none;">
-      <div class="top-bar">
-        <button class="back-btn" onclick="showMenu()">➔ 返回選單</button>
-        <span class="progress-text" id="progressText">第 1 / 50 題</span>
-      </div>
-
-      <div class="image-container" id="imageDisplay" onclick="speakCurrentWord()">🐱</div>
-      <div class="hint-text">點擊圖片聽正確發音</div>
-
-      <div class="answer-container" id="answerSlots"></div>
-      <div class="letters-container" id="letterPool"></div>
-
-      <button class="next-btn" id="nextBtn" onclick="loadNextQuestion()">下一題 ➔</button>
-    </div>
-  </div>
-
-  <script>
-    // 幼兒單字庫
-    const levelData = {
-      1: [
-        {word:"CAT",icon:"🐱"},{word:"DOG",icon:"🐶"},{word:"PIG",icon:"🐷"},{word:"COW",icon:"🐮"},
-        {word:"FOX",icon:"🦊"},{word:"SUN",icon:"☀️"},{word:"BUS",icon:"🚌"},{word:"BED",icon:"🛏️"},
-        {word:"CUP",icon:"🥤"},{word:"HAT",icon:"🧢"},{word:"EGG",icon:"🥚"},{word:"ICE",icon:"🧊"},
-        {word:"BOX",icon:"📦"},{word:"BAG",icon:"🎒"},{word:"MAP",icon:"🗺️"},{word:"PEN",icon:"🖊️"},
-        {word:"CAR",icon:"🚗"},{word:"BOY",icon:"👦"},{word:"KEY",icon:"🔑"},{word:"FAN",icon:"🪭"},
-        {word:"ANT",icon:"🐜"},{word:"BAT",icon:"🦇"},{word:"BEE",icon:"🐝"},{word:"OWL",icon:"🦉"},
-        {word:"RAT",icon:"🐀"},{word:"JAM",icon:"🥫"},{word:"NUT",icon:"🥜"},{word:"PIE",icon:"🥧"},
-        {word:"TEA",icon:"🍵"},{word:"CAN",icon:"🥫"},{word:"PIN",icon:"📌"},{word:"NET",icon:"🕸️"},
-        {word:"LIP",icon:"👄"},{word:"LEG",icon:"🦵"},{word:"ARM",icon:"🦾"},{word:"EYE",icon:"👁️"},
-        {word:"BUG",icon:"🐛"},{word:"FLY",icon:"🪰"},{word:"GEM",icon:"💎"},{word:"WEB",icon:"🕸️"},
-        {word:"MOP",icon:"🧹"},{word:"TOP",icon:"🪵"},{word:"BOW",icon:"🏹"},{word:"LOG",icon:"🪵"},
-        {word:"POT",icon:"🏺"},{word:"JUG",icon:"🏺"},{word:"TAG",icon:"🏷️"},{word:"CAP",icon:"🧢"},
-        {word:"SIT",icon:"🪑"},{word:"RUN",icon:"🏃"}
-      ],
-      2: [
-        {word:"DUCK",icon:"🦆"},{word:"BIRD",icon:"🐦"},{word:"FISH",icon:"🐟"},{word:"FROG",icon:"🐸"},
-        {word:"BEAR",icon:"🐻"},{word:"MILK",icon:"🥛"},{word:"CAKE",icon:"🎂"},{word:"CORN",icon:"🌽"},
-        {word:"RICE",icon:"🍚"},{word:"MOON",icon:"🌙"},{word:"STAR",icon:"⭐"},{word:"TREE",icon:"🌳"},
-        {word:"SHIP",icon:"🚢"},{word:"BOOK",icon:"📖"},{word:"BALL",icon:"⚽"},{word:"LION",icon:"🦁"},
-        {word:"DEER",icon:"🦌"},{word:"GOAT",icon:"🐐"},{word:"WOLF",icon:"🐺"},{word:"SEAL",icon:"🦭"},
-        {word:"SOUP",icon:"🍲"},{word:"MEAT",icon:"🥩"},{word:"PEAR",icon:"🍐"},{word:"KIWI",icon:"🥝"},
-        {word:"LEAF",icon:"🍃"},{word:"ROSE",icon:"🌹"},{word:"WIND",icon:"🌬️"},{word:"SNOW",icon:"❄️"},
-        {word:"RAIN",icon:"🌧️"},{word:"FIRE",icon:"🔥"},{word:"BOAT",icon:"⛵"},{word:"BIKE",icon:"🚲"},
-        {word:"TAXI",icon:"🚕"},{word:"RING",icon:"💍"},{word:"DOLL",icon:"🧸"},{word:"KITE",icon:"🪁"},
-        {word:"DRUM",icon:"🥁"},{word:"LAMP",icon:"💡"},{word:"DOOR",icon:"🚪"},{word:"SHIRT",icon:"👕"},
-        {word:"SOCK",icon:"🧦"},{word:"SHOE",icon:"👞"},{word:"HAND",icon:"✋"},{word:"FOOT",icon:"🦶"},
-        {word:"FACE",icon:"😀"},{word:"NOSE",icon:"👃"},{word:"HAIR",icon:"💇"},{word:"BABY",icon:"👶"},
-        {word:"KING",icon:"👑"},{word:"GIFT",icon:"🎁"},{word:"COIN",icon:"🪙"},{word:"PARK",icon:"🏞️"},
-        {word:"HOME",icon:"🏠"},{word:"FARM",icon:"🚜"},{word:"BELL",icon:"🔔"}
-      ],
-      3: [
-        {word:"APPLE",icon:"🍎"},{word:"PIZZA",icon:"🍕"},{word:"TIGER",icon:"🐯"},{word:"ZEBRA",icon:"🦓"},
-        {word:"PANDA",icon:"🐼"},{word:"CAMEL",icon:"🐫"},{word:"KOALA",icon:"🐨"},{word:"SNAKE",icon:"🐍"},
-        {word:"WHALE",icon:"🐳"},{word:"SHARK",icon:"🦈"},{word:"HOUSE",icon:"🏠"},{word:"TRAIN",icon:"🚆"},
-        {word:"PLANE",icon:"✈️"},{word:"CLOCK",icon:"⏰"},{word:"CHAIR",icon:"🪑"},{word:"TABLE",icon:"🪵"},
-        {word:"PHONE",icon:"📱"},{word:"BREAD",icon:"🍞"},{word:"CANDY",icon:"🍬"},{word:"DONUT",icon:"🍩"},{word:"LEMON",icon:"🍋"},
-        {word:"PEACH",icon:"🍑"},{word:"MELON",icon:"🍈"},{word:"MANGO",icon:"🥭"},{word:"GRAPE",icon:"🍇"},
-        {word:"PLANT",icon:"🪴"},{word:"GRASS",icon:"🌱"},{word:"WATER",icon:"💧"},{word:"EARTH",icon:"🌍"},
-        {word:"BEACH",icon:"🏖️"},{word:"CLOUD",icon:"☁️"},{word:"STORM",icon:"🌩️"},{word:"SKIRT",icon:"👗"},
-        {word:"DRESS",icon:"👗"},{word:"JEANS",icon:"👖"},{word:"BOOTS",icon:"👢"},{word:"CROWN",icon:"👑"},
-        {word:"ROBOT",icon:"🤖"},{word:"MUSIC",icon:"🎵"},{word:"RADIO",icon:"📻"},{word:"PAPER",icon:"📄"},
-        {word:"SPOON",icon:"🥄"},{word:"KNIFE",icon:"🔪"},{word:"RULER",icon:"📏"},{word:"HEART",icon:"❤️"},
-        {word:"SMILE",icon:"😊"},{word:"GIRL",icon:"👧"},{word:"ANGEL",icon:"👼"}
-      ],
-      4: [
-        {word:"BANANA",icon:"🍌"},{word:"MONKEY",icon:"🐒"},{word:"RABBIT",icon:"🐰"},{word:"TURTLE",icon:"🐢"},
-        {word:"SPIDER",icon:"🕷️"},{word:"DONKEY",icon:"🫏"},{word:"PARROT",icon:"🦜"},{word:"TOMATO",icon:"🍅"},
-        {word:"POTATO",icon:"🥔"},{word:"CARROT",icon:"🥕"},{word:"CHEESE",icon:"🧀"},{word:"COOKIE",icon:"🍪"},
-        {word:"BURGER",icon:"🍔"},{word:"BUTTER",icon:"🧈"},{word:"ROCKET",icon:"🚀"},{word:"GUITAR",icon:"🎸"},
-        {word:"VIOLIN",icon:"🎻"},{word:"WINDOW",icon:"🪟"},{word:"PENCIL",icon:"✏️"},{word:"CAMERA",icon:"📷"},
-        {word:"FLOWER",icon:"🌸"},{word:"FOREST",icon:"🌲"},{word:"SUNNY",icon:"☀️"},{word:"JACKET",icon:"🧥"},
-        {word:"SHORTS",icon:"🩳"},{word:"DOCTOR",icon:"🧑‍⚕️"},{word:"POLICE",icon:"👮"},{word:"FAMILY",icon:"👨‍👩‍👧"},
-        {word:"MOTHER",icon:"👩"},{word:"FATHER",icon:"👨"},{word:"SISTER",icon:"👧"},{word:"SCHOOL",icon:"🏫"},
-        {word:"MARKET",icon:"🛒"},{word:"DRAGON",icon:"🐉"},{word:"CIRCUS",icon:"🎪"},{word:"PIRATE",icon:"🏴‍☠️"},
-        {word:"WIZARD",icon:"🧙"},{word:"CASTLE",icon:"🏰"},{word:"BRIDGE",icon:"🌉"},{word:"ISLAND",icon:"🏝️"},
-        {word:"DESERT",icon:"🏜️"},{word:"WINTER",icon:"❄️"},{word:"SUMMER",icon:"🏖️"},{word:"SPRING",icon:"🌸"}
-      ],
-      5: [
-        {word:"GIRAFFE",icon:"🦒"},{word:"ELEPHANT",icon:"🐘"},{word:"DOLPHIN",icon:"🐬"},{word:"OCTOPUS",icon:"🐙"},
-        {word:"RAINBOW",icon:"🌈"},{word:"AVOCADO",icon:"🥑"},{word:"POPCORN",icon:"🍿"},{word:"PANCAKE",icon:"🥞"},
-        {word:"BICYCLE",icon:"🚲"},{word:"TRACTOR",icon:"🚜"},{word:"SCOOTER",icon:"🛴"},{word:"COMPUTER",icon:"💻"},
-        {word:"UMBRELLA",icon:"☂️"},{word:"BALLOON",icon:"🎈"},{word:"FEATHER",icon:"🪶"},{word:"VOLCANO",icon:"🌋"},
-        {word:"MOUNTAIN",icon:"⛰️"},{word:"SUNFLOWER",icon:"🌻"},{word:"MUSHROOM",icon:"🍄"},{word:"NOTEBOOK",icon:"📓"},
-        {word:"BACKPACK",icon:"🎒"},{word:"SCISSORS",icon:"✂️"},{word:"TEACHER",icon:"🧑‍🏫"},{word:"PAINTER",icon:"🧑‍🎨"},
-        {word:"SINGING",icon:"🎤"},{word:"DANCING",icon:"💃"},{word:"FOOTBALL",icon:"⚽"},{word:"BASEBALL",icon:"⚾"},
-        {word:"SWIMMING",icon:"🏊"},{word:"HOSPITAL",icon:"🏥"},{word:"PHARMACY",icon:"💊"},{word:"AIRPORT",icon:"✈️"},
-        {word:"DINOSAUR",icon:"🦖"},{word:"UNICORN",icon:"🦄"},{word:"MONSTER",icon:"👾"},{word:"FIREWORKS",icon:"🎆"},
-        {word:"TELESCOPE",icon:"🔭"},{word:"MICROSCOPE",icon:"🔬"},{word:"COMPASS",icon:"🧭"},{word:"SANDWICH",icon:"🥪"},
-        {word:"CHOCOLATE",icon:"🍫"},{word:"BUTTERFLY",icon:"🦋"},{word:"LADYBUG",icon:"🐞"}
-      ]
-    };
-
-    let selectedHintMode = 'trace'; // 預設提示模式：trace (虛線提示)
-    let currentLevel = 1;
-    let questions = [];
-    let currentIndex = 0;
-    let currentAnswer = [];
-
-    // 切換提示模式
-    function setHintMode(mode, btnElement) {
-      selectedHintMode = mode;
-      document.querySelectorAll('.hint-btn').forEach(b => b.classList.remove('active'));
-      btnElement.classList.add('active');
-    }
-
-    function startLevel(lvl) {
-      currentLevel = lvl;
-      questions = [...levelData[lvl]].sort(() => Math.random() - 0.5);
-      currentIndex = 0;
-      
-      document.getElementById('menuScreen').style.display = 'none';
-      document.getElementById('gameScreen').style.display = 'block';
-      initQuestion();
-    }
-
-    function showMenu() {
-      document.getElementById('gameScreen').style.display = 'none';
-      document.getElementById('menuScreen').style.display = 'block';
-    }
-
-    function initQuestion() {
-      const q = questions[currentIndex];
-      document.getElementById('imageDisplay').textContent = q.icon;
-      document.getElementById('nextBtn').style.display = 'none';
-      document.getElementById('correctBadge').classList.remove('show');
-      document.getElementById('progressText').textContent = `第 ${currentIndex + 1} / ${questions.length} 題`;
-      currentAnswer = [];
-
-      // 根據提示模式決定是否自動播放語音
-      if (selectedHintMode === 'trace' || selectedHintMode === 'audio') {
-        speakCurrentWord();
-      }
-
-      // 生成答案槽，並根據選擇的提示模式顯示內容
-      const slotsContainer = document.getElementById('answerSlots');
-      slotsContainer.innerHTML = '';
-      slotsContainer.classList.remove('shake');
-      
-      for (let i = 0; i < q.word.length; i++) {
-        const slot = document.createElement('div');
-        slot.className = 'slot';
-        
-        // 如果選擇「字母虛線提示」，加入半透明字母
-        if (selectedHintMode === 'trace') {
-          slot.textContent = q.word[i];
-          slot.classList.add('show-trace');
-        } else {
-          slot.textContent = ''; // 純語音或無提示模式不放背景字
-        }
-        
-        slotsContainer.appendChild(slot);
-      }
-
-      // 生成字母池
-      const letters = q.word.split('');
-      const extraCount = currentLevel >= 3 ? 3 : 2;
-      for(let i=0; i<extraCount; i++){
-        letters.push(String.fromCharCode(65 + Math.floor(Math.random() * 26)));
-      }
-      letters.sort(() => Math.random() - 0.5);
-
-      const poolContainer = document.getElementById('letterPool');
-      poolContainer.innerHTML = '';
-      letters.forEach((char) => {
-        const btn = document.createElement('button');
-        btn.className = 'letter-btn';
-        btn.textContent = char;
-        btn.onclick = () => selectLetter(btn, char);
-        poolContainer.appendChild(btn);
-      });
-    }
-
-    function selectLetter(btn, char) {
-      const targetWord = questions[currentIndex].word;
-      if (currentAnswer.length < targetWord.length) {
-        currentAnswer.push(char);
-        btn.classList.add('disabled');
-        
-        triggerHaptic(15);
-        speakText(char);
-
-        const slots = document.querySelectorAll('.slot');
-        const activeSlot = slots[currentAnswer.length - 1];
-        activeSlot.textContent = char;
-        activeSlot.classList.add('filled');
-
-        if (currentAnswer.length === targetWord.length) {
-          checkAnswer();
-        }
-      }
-    }
-
-    function checkAnswer() {
-      const userWord = currentAnswer.join('');
-      const targetWord = questions[currentIndex].word;
-      const slotsContainer = document.getElementById('answerSlots');
-
-      if (userWord === targetWord) {
-        playTone(523.25, 0.15);
-        setTimeout(() => playTone(659.25, 0.25), 150);
-        triggerHaptic([30, 50, 30]);
-
-        // 顯示 Correct! 🎉 標籤
-        document.getElementById('correctBadge').classList.add('show');
-
-        setTimeout(() => {
-          speakText("Correct! " + targetWord);
-          document.getElementById('nextBtn').style.display = 'inline-block';
-        }, 300);
-      } else {
-        playTone(196.00, 0.3);
-        slotsContainer.classList.add('shake');
-        triggerHaptic([100, 50, 100]);
-
-        setTimeout(() => {
-          speakText("Try again!");
-          resetCurrentQuestion();
-        }, 600);
-      }
-    }
-
-    function resetCurrentQuestion() {
-      const targetWord = questions[currentIndex].word;
-      currentAnswer = [];
-      const slotsContainer = document.getElementById('answerSlots');
-      slotsContainer.classList.remove('shake');
-
-      document.querySelectorAll('.slot').forEach((s, i) => {
-        if (selectedHintMode === 'trace') {
-          s.textContent = targetWord[i];
-        } else {
-          s.textContent = '';
-        }
-        s.classList.remove('filled');
-      });
-      document.querySelectorAll('.letter-btn').forEach(b => b.classList.remove('disabled'));
-    }
-
-    function loadNextQuestion() {
-      currentIndex = (currentIndex + 1) % questions.length;
-      initQuestion();
-    }
-
-    // 音效與語音
-    function playTone(freq, duration) {
-      try {
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        if (!AudioContext) return;
-        const ctx = new AudioContext();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = 'sine';
-        osc.frequency.value = freq;
-        gain.gain.setValueAtTime(0.1, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start();
-        osc.stop(ctx.currentTime + duration);
-      } catch (e) {}
-    }
-
-    function triggerHaptic(pattern) {
-      if ('vibrate' in navigator) navigator.vibrate(pattern);
-    }
-
-    function speakText(text) {
-      if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(text.toLowerCase());
-        utterance.lang = 'en-US';
-        utterance.rate = 0.8;
-        window.speechSynthesis.speak(utterance);
-      }
-    }
-
-    function speakCurrentWord() {
-      speakText(questions[currentIndex].word);
-    }
-  </script>
-</body>
-</html>
+        <button class="level-btn lvl
