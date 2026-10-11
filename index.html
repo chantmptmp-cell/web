@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>幼兒英文單字多感官學習遊戲</title>
+  <title>幼兒英文單字學習遊戲</title>
   <style>
     * {
       box-sizing: border-box;
       user-select: none;
+      -webkit-tap-highlight-color: transparent;
     }
     body {
       font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
@@ -223,7 +224,7 @@
     }
     .shake { animation: shake 0.4s ease-in-out; }
 
-    /* 繽紛字母按鈕 */
+    /* 字母按鈕 */
     .letters-container {
       display: flex;
       justify-content: center;
@@ -274,7 +275,7 @@
     <div id="correctBadge" class="correct-badge">Super Star! 🌟</div>
 
     <div class="header-bar">
-      <div class="mascot" id="mascotIcon" onclick="speakText('I love learning english with you!')">🐻</div>
+      <div class="mascot" id="mascotIcon" onclick="speakText('Hello')">🐻</div>
       <div id="mascotBubble" style="font-size: 14px; font-weight: bold; color: #495057;">加油喔！</div>
       <div class="score-board">⭐ <span id="starScore">0</span></div>
     </div>
@@ -320,36 +321,5 @@
   </div>
 
   <script>
-    const levelData = {
-      1: [
-        {word:"CAT",icon:"🐱"},{word:"DOG",icon:"🐶"},{word:"PIG",icon:"🐷"},{word:"COW",icon:"🐮"},
-        {word:"FOX",icon:"🦊"},{word:"SUN",icon:"☀️"},{word:"BUS",icon:"🚌"},{word:"BED",icon:"🛏️"},
-        {word:"CUP",icon:"🥤"},{word:"HAT",icon:"🧢"},{word:"EGG",icon:"🥚"},{word:"ICE",icon:"🧊"},
-        {word:"BOX",icon:"📦"},{word:"BAG",icon:"🎒"},{word:"MAP",icon:"🗺️"},{word:"PEN",icon:"🖊️"},
-        {word:"CAR",icon:"🚗"},{word:"BOY",icon:"👦"},{word:"KEY",icon:"🔑"},{word:"FAN",icon:"🪭"},
-        {word:"ANT",icon:"🐜"},{word:"BAT",icon:"🦇"},{word:"BEE",icon:"🐝"},{word:"OWL",icon:"🦉"},
-        {word:"RAT",icon:"🐀"},{word:"JAM",icon:"🥫"},{word:"NUT",icon:"🥜"},{word:"PIE",icon:"🥧"},
-        {word:"TEA",icon:"🍵"},{word:"CAN",icon:"🥫"},{word:"PIN",icon:"📌"},{word:"NET",icon:"🕸️"},
-        {word:"LIP",icon:"👄"},{word:"LEG",icon:"🦵"},{word:"ARM",icon:"🦾"},{word:"EYE",icon:"👁️"},
-        {word:"BUG",icon:"🐛"},{word:"FLY",icon:"🪰"},{word:"GEM",icon:"💎"},{word:"WEB",icon:"🕸️"},
-        {word:"MOP",icon:"🧹"},{word:"TOP",icon:"🪵"},{word:"BOW",icon:"🏹"},{word:"LOG",icon:"🪵"},
-        {word:"POT",icon:"🏺"},{word:"JUG",icon:"🏺"},{word:"TAG",icon:"🏷️"},{word:"CAP",icon:"🧢"},
-        {word:"SIT",icon:"🪑"},{word:"RUN",icon:"🏃"}
-      ],
-      2: [
-        {word:"DUCK",icon:"🦆"},{word:"BIRD",icon:"🐦"},{word:"FISH",icon:"🐟"},{word:"FROG",icon:"🐸"},
-        {word:"BEAR",icon:"🐻"},{word:"MILK",icon:"🥛"},{word:"CAKE",icon:"🎂"},{word:"CORN",icon:"🌽"},
-        {word:"RICE",icon:"🍚"},{word:"MOON",icon:"🌙"},{word:"STAR",icon:"⭐"},{word:"TREE",icon:"🌳"},
-        {word:"SHIP",icon:"🚢"},{word:"BOOK",icon:"📖"},{word:"BALL",icon:"⚽"},{word:"LION",icon:"🦁"},
-        {word:"DEER",icon:"🦌"},{word:"GOAT",icon:"🐐"},{word:"WOLF",icon:"🐺"},{word:"SEAL",icon:"🦭"},
-        {word:"SOUP",icon:"🍲"},{word:"MEAT",icon:"🥩"},{word:"PEAR",icon:"🍐"},{word:"KIWI",icon:"🥝"},
-        {word:"LEAF",icon:"🍃"},{word:"ROSE",icon:"🌹"},{word:"WIND",icon:"🌬️"},{word:"SNOW",icon:"❄️"},
-        {word:"RAIN",icon:"🌧️"},{word:"FIRE",icon:"🔥"},{word:"BOAT",icon:"⛵"},{word:"BIKE",icon:"🚲"},
-        {word:"TAXI",icon:"🚕"},{word:"RING",icon:"💍"},{word:"DOLL",icon:"🧸"},{word:"KITE",icon:"🪁"},
-        {word:"DRUM",icon:"🥁"},{word:"LAMP",icon:"💡"},{word:"DOOR",icon:"🚪"},{word:"SHIRT",icon:"👕"},
-        {word:"SOCK",icon:"🧦"},{word:"SHOE",icon:"👞"},{word:"HAND",icon:"✋"},{word:"FOOT",icon:"🦶"},
-        {word:"FACE",icon:"😀"},{word:"NOSE",icon:"👃"},{word:"HAIR",icon:"💇"},{word:"BABY",icon:"👶"},
-        {word:"KING",icon:"👑"},{word:"GIFT",icon:"🎁"},{word:"COIN",icon:"🪙"},{word:"PARK",icon:"🏞️"},
-        {word:"HOME",icon:"🏠"},{word:"FARM",icon:"🚜"},{word:"BELL",icon:"🔔"}
-      ],
-      3:
+    var levelData = {
+      1:
