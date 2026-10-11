@@ -297,16 +297,22 @@
       }
     }
 
-    // 語音發音
+    // 修正後的語音發音函式
     function speakText(text) {
       if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(text);
+        window.speechSynthesis.cancel(); // 停止先前的發音
+        
+        // 將輸入字串轉為小寫，確保語音引擎讀出完整單字（"cat"），而非逐字拼讀（"C-A-T"）
+        const lowerText = text.toLowerCase(); 
+        const utterance = new SpeechSynthesisUtterance(lowerText);
+        
         utterance.lang = 'en-US';
-        utterance.rate = 0.8;
+        utterance.rate = 0.8; // 保持稍微放慢語速，方便幼兒聆聽
+        
         window.speechSynthesis.speak(utterance);
       }
     }
+
 
     function speakCurrentWord() {
       speakText(questions[currentIndex].word);
