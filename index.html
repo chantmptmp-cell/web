@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>幼兒英文單字多感官學習遊戲 (部分提示進階版)</title>
+  <title>幼兒英文單字童趣多感官遊戲</title>
+  <!-- 引入免費彩帶動畫庫 -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <style>
     * {
       box-sizing: border-box;
@@ -11,7 +13,7 @@
     }
     body {
       font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
-      background-color: #e7f5ff;
+      background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -24,13 +26,14 @@
     .game-card {
       background: #ffffff;
       padding: 20px;
-      border-radius: 24px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+      border-radius: 28px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.15);
       text-align: center;
       width: 100%;
       max-width: 520px;
       position: relative;
       overflow: hidden;
+      border: 4px solid #fff;
     }
 
     /* 答對彈出標籤 */
@@ -41,9 +44,9 @@
       transform: translate(-50%, -50%) scale(0);
       background: #51cf66;
       color: white;
-      font-size: 36px;
+      font-size: 32px;
       font-weight: bold;
-      padding: 12px 30px;
+      padding: 12px 28px;
       border-radius: 50px;
       box-shadow: 0 8px 20px rgba(0,0,0,0.25);
       z-index: 100;
@@ -54,13 +57,39 @@
       transform: translate(-50%, -50%) scale(1.1);
     }
 
-    /* 提示模式設定區塊 */
+    /* 吉祥物與計分板欄位 */
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #fff9db;
+      border-radius: 18px;
+      padding: 8px 16px;
+      margin-bottom: 12px;
+    }
+    .mascot {
+      font-size: 36px;
+      cursor: pointer;
+      animation: bounce 2s infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+    .score-board {
+      font-size: 20px;
+      font-weight: bold;
+      color: #fcc419;
+      text-shadow: 1px 1px 0 #e67700;
+    }
+
+    /* 提示模式選擇器 */
     .hint-selector-box {
       background: #f8f9fa;
-      border: 2px solid #e9ecef;
-      border-radius: 16px;
+      border: 2px dashed #bac8ff;
+      border-radius: 18px;
       padding: 12px;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
     }
     .hint-selector-box label {
       font-weight: bold;
@@ -79,17 +108,17 @@
       font-size: 13px;
       font-weight: bold;
       border: 2px solid #ced4da;
-      border-radius: 10px;
+      border-radius: 12px;
       background: white;
       color: #495057;
       cursor: pointer;
       transition: all 0.2s;
     }
     .hint-btn.active {
-      background: #339af0;
+      background: #4c6ef5;
       color: white;
-      border-color: #1864ab;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      border-color: #364fc7;
+      box-shadow: 0 3px 6px rgba(76,110,245,0.3);
     }
 
     /* 主選單：難度按鈕 */
@@ -104,7 +133,7 @@
       font-weight: bold;
       color: white;
       border: none;
-      border-radius: 16px;
+      border-radius: 18px;
       cursor: pointer;
       transition: transform 0.1s;
       display: flex;
@@ -123,7 +152,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 15px;
+      margin-bottom: 12px;
     }
     .back-btn {
       padding: 6px 14px;
@@ -143,13 +172,14 @@
 
     /* 上方提示圖片 */
     .image-container {
-      font-size: 90px;
+      font-size: 95px;
       background: #fff9db;
       border: 4px dashed #ffd43b;
-      border-radius: 20px;
+      border-radius: 24px;
       padding: 10px;
       cursor: pointer;
       transition: transform 0.2s;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
     }
     .image-container:active { transform: scale(0.95); }
     .hint-text {
@@ -177,14 +207,12 @@
       align-items: center;
       justify-content: center;
       background-color: #f1f3f5;
-      border-radius: 8px 8px 0 0;
+      border-radius: 10px 10px 0 0;
       transition: all 0.2s;
     }
-    /* 虛線提示樣式 */
     .slot.show-trace {
       color: rgba(25, 113, 194, 0.25);
     }
-    /* 填充後的深色樣式 */
     .slot.filled {
       color: #1971c2 !important;
       background-color: #e7f5ff;
@@ -198,7 +226,7 @@
     }
     .shake { animation: shake 0.4s ease-in-out; }
 
-    /* 字母選單 */
+    /* 繽紛彩虹字母塊 */
     .letters-container {
       display: flex;
       justify-content: center;
@@ -206,34 +234,39 @@
       flex-wrap: wrap;
     }
     .letter-btn {
-      width: 50px;
-      height: 50px;
-      background-color: #ff8787;
+      width: 52px;
+      height: 52px;
       color: white;
       font-size: 28px;
       font-weight: bold;
       border: none;
-      border-radius: 14px;
-      box-shadow: 0 5px 0 #e03131;
+      border-radius: 16px;
       cursor: pointer;
       transition: all 0.1s;
     }
+    /* 彩虹配色循環 */
+    .letter-btn:nth-child(5n+1) { background-color: #ff6b6b; box-shadow: 0 5px 0 #c92a2a; }
+    .letter-btn:nth-child(5n+2) { background-color: #4c6ef5; box-shadow: 0 5px 0 #364fc7; }
+    .letter-btn:nth-child(5n+3) { background-color: #51cf66; box-shadow: 0 5px 0 #2b8a3e; }
+    .letter-btn:nth-child(5n+4) { background-color: #fcc419; box-shadow: 0 5px 0 #e67700; color: #333; }
+    .letter-btn:nth-child(5n+5) { background-color: #cc5de8; box-shadow: 0 5px 0 #862e9c; }
+
     .letter-btn:active {
       transform: translateY(3px);
-      box-shadow: 0 2px 0 #e03131;
+      box-shadow: 0 2px 0 rgba(0,0,0,0.2) !important;
     }
     .letter-btn.disabled { visibility: hidden; }
 
     .next-btn {
       margin-top: 15px;
-      padding: 12px 28px;
-      font-size: 18px;
+      padding: 12px 32px;
+      font-size: 20px;
       font-weight: bold;
-      background-color: #51cf66;
+      background: linear-gradient(180deg, #51cf66 0%, #2b8a3e 100%);
       color: white;
       border: none;
       border-radius: 30px;
-      box-shadow: 0 4px 0 #2b8a3e;
+      box-shadow: 0 5px 0 #2b8a3e;
       cursor: pointer;
       display: none;
     }
@@ -242,13 +275,19 @@
 <body>
 
   <div class="game-card">
-    <div id="correctBadge" class="correct-badge">Correct! 🎉</div>
+    <div id="correctBadge" class="correct-badge">Super Star! 🌟</div>
+
+    <!-- 頂部吉祥物與得分 -->
+    <div class="header-bar">
+      <div class="mascot" id="mascotIcon" onclick="speakText('I love learning english with you!')">🐻</div>
+      <div id="mascotBubble" style="font-size: 14px; font-weight: bold; color: #495057;">加油喔！</div>
+      <div class="score-board">⭐ <span id="starScore">0</span></div>
+    </div>
 
     <!-- 主選單：難度與提示設定 -->
     <div id="menuScreen">
       <h2>請選擇學習關卡 🎯</h2>
 
-      <!-- 提示模式選擇器 -->
       <div class="hint-selector-box">
         <label>💡 請選擇提示輔助模式：</label>
         <div class="hint-options">
@@ -263,4 +302,140 @@
         <button class="level-btn lvl-1" onclick="startLevel(1)">Level 1: 幼兒入門 (3字母) <span>50題</span></button>
         <button class="level-btn lvl-2" onclick="startLevel(2)">Level 2: 基礎進階 (4字母) <span>55題</span></button>
         <button class="level-btn lvl-3" onclick="startLevel(3)">Level 3: 中級探索 (5字母) <span>50題</span></button>
-        <button class="level-btn lvl
+        <button class="level-btn lvl-4" onclick="startLevel(4)">Level 4: 高級挑戰 (6+字母) <span>50題</span></button>
+        <button class="level-btn lvl-5" onclick="startLevel(5)">Level 5: 英語小達人 (綜合) <span>50題</span></button>
+      </div>
+    </div>
+
+    <!-- 遊戲畫面 -->
+    <div id="gameScreen" style="display: none;">
+      <div class="top-bar">
+        <button class="back-btn" onclick="showMenu()">➔ 返回選單</button>
+        <span class="progress-text" id="progressText">第 1 / 50 題</span>
+      </div>
+
+      <div class="image-container" id="imageDisplay" onclick="speakCurrentWord()">🐱</div>
+      <div class="hint-text">點擊圖片聽正確發音</div>
+
+      <div class="answer-container" id="answerSlots"></div>
+      <div class="letters-container" id="letterPool"></div>
+
+      <button class="next-btn" id="nextBtn" onclick="loadNextQuestion()">下一題 ➔</button>
+    </div>
+  </div>
+
+  <script>
+    const levelData = {
+      1: [
+        {word:"CAT",icon:"🐱"},{word:"DOG",icon:"🐶"},{word:"PIG",icon:"🐷"},{word:"COW",icon:"🐮"},
+        {word:"FOX",icon:"🦊"},{word:"SUN",icon:"☀️"},{word:"BUS",icon:"🚌"},{word:"BED",icon:"🛏️"},
+        {word:"CUP",icon:"🥤"},{word:"HAT",icon:"🧢"},{word:"EGG",icon:"🥚"},{word:"ICE",icon:"🧊"},
+        {word:"BOX",icon:"📦"},{word:"BAG",icon:"🎒"},{word:"MAP",icon:"🗺️"},{word:"PEN",icon:"🖊️"},
+        {word:"CAR",icon:"🚗"},{word:"BOY",icon:"👦"},{word:"KEY",icon:"🔑"},{word:"FAN",icon:"🪭"},
+        {word:"ANT",icon:"🐜"},{word:"BAT",icon:"🦇"},{word:"BEE",icon:"🐝"},{word:"OWL",icon:"🦉"},
+        {word:"RAT",icon:"🐀"},{word:"JAM",icon:"🥫"},{word:"NUT",icon:"🥜"},{word:"PIE",icon:"🥧"},
+        {word:"TEA",icon:"🍵"},{word:"CAN",icon:"🥫"},{word:"PIN",icon:"📌"},{word:"NET",icon:"🕸️"},
+        {word:"LIP",icon:"👄"},{word:"LEG",icon:"🦵"},{word:"ARM",icon:"🦾"},{word:"EYE",icon:"👁️"},
+        {word:"BUG",icon:"🐛"},{word:"FLY",icon:"🪰"},{word:"GEM",icon:"💎"},{word:"WEB",icon:"🕸️"},
+        {word:"MOP",icon:"🧹"},{word:"TOP",icon:"🪵"},{word:"BOW",icon:"🏹"},{word:"LOG",icon:"🪵"},
+        {word:"POT",icon:"🏺"},{word:"JUG",icon:"🏺"},{word:"TAG",icon:"🏷️"},{word:"CAP",icon:"🧢"},
+        {word:"SIT",icon:"🪑"},{word:"RUN",icon:"🏃"}
+      ],
+      2: [
+        {word:"DUCK",icon:"🦆"},{word:"BIRD",icon:"🐦"},{word:"FISH",icon:"🐟"},{word:"FROG",icon:"🐸"},
+        {word:"BEAR",icon:"🐻"},{word:"MILK",icon:"🥛"},{word:"CAKE",icon:"🎂"},{word:"CORN",icon:"🌽"},
+        {word:"RICE",icon:"🍚"},{word:"MOON",icon:"🌙"},{word:"STAR",icon:"⭐"},{word:"TREE",icon:"🌳"},
+        {word:"SHIP",icon:"🚢"},{word:"BOOK",icon:"📖"},{word:"BALL",icon:"⚽"},{word:"LION",icon:"🦁"},
+        {word:"DEER",icon:"🦌"},{word:"GOAT",icon:"🐐"},{word:"WOLF",icon:"🐺"},{word:"SEAL",icon:"🦭"},
+        {word:"SOUP",icon:"🍲"},{word:"MEAT",icon:"🥩"},{word:"PEAR",icon:"🍐"},{word:"KIWI",icon:"🥝"},
+        {word:"LEAF",icon:"🍃"},{word:"ROSE",icon:"🌹"},{word:"WIND",icon:"🌬️"},{word:"SNOW",icon:"❄️"},
+        {word:"RAIN",icon:"🌧️"},{word:"FIRE",icon:"🔥"},{word:"BOAT",icon:"⛵"},{word:"BIKE",icon:"🚲"},
+        {word:"TAXI",icon:"🚕"},{word:"RING",icon:"💍"},{word:"DOLL",icon:"🧸"},{word:"KITE",icon:"🪁"},
+        {word:"DRUM",icon:"🥁"},{word:"LAMP",icon:"💡"},{word:"DOOR",icon:"🚪"},{word:"SHIRT",icon:"👕"},
+        {word:"SOCK",icon:"🧦"},{word:"SHOE",icon:"👞"},{word:"HAND",icon:"✋"},{word:"FOOT",icon:"🦶"},
+        {word:"FACE",icon:"😀"},{word:"NOSE",icon:"👃"},{word:"HAIR",icon:"💇"},{word:"BABY",icon:"👶"},
+        {word:"KING",icon:"👑"},{word:"GIFT",icon:"🎁"},{word:"COIN",icon:"🪙"},{word:"PARK",icon:"🏞️"},
+        {word:"HOME",icon:"🏠"},{word:"FARM",icon:"🚜"},{word:"BELL",icon:"🔔"}
+      ],
+      3: [
+        {word:"APPLE",icon:"🍎"},{word:"PIZZA",icon:"🍕"},{word:"TIGER",icon:"🐯"},{word:"ZEBRA",icon:"🦓"},
+        {word:"PANDA",icon:"🐼"},{word:"CAMEL",icon:"🐫"},{word:"KOALA",icon:"🐨"},{word:"SNAKE",icon:"🐍"},
+        {word:"WHALE",icon:"🐳"},{word:"SHARK",icon:"🦈"},{word:"HOUSE",icon:"🏠"},{word:"TRAIN",icon:"🚆"},
+        {word:"PLANE",icon:"✈️"},{word:"CLOCK",icon:"⏰"},{word:"CHAIR",icon:"🪑"},{word:"TABLE",icon:"🪵"},
+        {word:"PHONE",icon:"📱"},{word:"BREAD",icon:"🍞"},{word:"CANDY",icon:"🍬"},{word:"DONUT",icon:"🍩"},{word:"LEMON",icon:"🍋"},
+        {word:"PEACH",icon:"🍑"},{word:"MELON",icon:"🍈"},{word:"MANGO",icon:"🥭"},{word:"GRAPE",icon:"🍇"},
+        {word:"PLANT",icon:"🪴"},{word:"GRASS",icon:"🌱"},{word:"WATER",icon:"💧"},{word:"EARTH",icon:"🌍"},
+        {word:"BEACH",icon:"🏖️"},{word:"CLOUD",icon:"☁️"},{word:"STORM",icon:"🌩️"},{word:"SKIRT",icon:"👗"},
+        {word:"DRESS",icon:"👗"},{word:"JEANS",icon:"👖"},{word:"BOOTS",icon:"👢"},{word:"CROWN",icon:"👑"},
+        {word:"ROBOT",icon:"🤖"},{word:"MUSIC",icon:"🎵"},{word:"RADIO",icon:"📻"},{word:"PAPER",icon:"📄"},
+        {word:"SPOON",icon:"🥄"},{word:"KNIFE",icon:"🔪"},{word:"RULER",icon:"📏"},{word:"HEART",icon:"❤️"},
+        {word:"SMILE",icon:"😊"},{word:"GIRL",icon:"👧"},{word:"ANGEL",icon:"👼"}
+      ],
+      4: [
+        {word:"BANANA",icon:"🍌"},{word:"MONKEY",icon:"🐒"},{word:"RABBIT",icon:"🐰"},{word:"TURTLE",icon:"🐢"},
+        {word:"SPIDER",icon:"🕷️"},{word:"DONKEY",icon:"🫏"},{word:"PARROT",icon:"🦜"},{word:"TOMATO",icon:"🍅"},
+        {word:"POTATO",icon:"🥔"},{word:"CARROT",icon:"🥕"},{word:"CHEESE",icon:"🧀"},{word:"COOKIE",icon:"🍪"},
+        {word:"BURGER",icon:"🍔"},{word:"BUTTER",icon:"🧈"},{word:"ROCKET",icon:"🚀"},{word:"GUITAR",icon:"🎸"},
+        {word:"VIOLIN",icon:"🎻"},{word:"WINDOW",icon:"🪟"},{word:"PENCIL",icon:"✏️"},{word:"CAMERA",icon:"📷"},
+        {word:"FLOWER",icon:"🌸"},{word:"FOREST",icon:"🌲"},{word:"SUNNY",icon:"☀️"},{word:"JACKET",icon:"🧥"},
+        {word:"SHORTS",icon:"🩳"},{word:"DOCTOR",icon:"🧑‍⚕️"},{word:"POLICE",icon:"👮"},{word:"FAMILY",icon:"👨‍👩‍👧"},
+        {word:"MOTHER",icon:"👩"},{word:"FATHER",icon:"👨"},{word:"SISTER",icon:"👧"},{word:"SCHOOL",icon:"🏫"},
+        {word:"MARKET",icon:"🛒"},{word:"DRAGON",icon:"🐉"},{word:"CIRCUS",icon:"🎪"},{word:"PIRATE",icon:"🏴‍☠️"},
+        {word:"WIZARD",icon:"🧙"},{word:"CASTLE",icon:"🏰"},{word:"BRIDGE",icon:"🌉"},{word:"ISLAND",icon:"🏝️"},
+        {word:"DESERT",icon:"🏜️"},{word:"WINTER",icon:"❄️"},{word:"SUMMER",icon:"🏖️"},{word:"SPRING",icon:"🌸"}
+      ],
+      5: [
+        {word:"GIRAFFE",icon:"🦒"},{word:"ELEPHANT",icon:"🐘"},{word:"DOLPHIN",icon:"🐬"},{word:"OCTOPUS",icon:"🐙"},
+        {word:"RAINBOW",icon:"🌈"},{word:"AVOCADO",icon:"🥑"},{word:"POPCORN",icon:"🍿"},{word:"PANCAKE",icon:"🥞"},
+        {word:"BICYCLE",icon:"🚲"},{word:"TRACTOR",icon:"🚜"},{word:"SCOOTER",icon:"🛴"},{word:"COMPUTER",icon:"💻"},
+        {word:"UMBRELLA",icon:"☂️"},{word:"BALLOON",icon:"🎈"},{word:"FEATHER",icon:"🪶"},{word:"VOLCANO",icon:"🌋"},
+        {word:"MOUNTAIN",icon:"⛰️"},{word:"SUNFLOWER",icon:"🌻"},{word:"MUSHROOM",icon:"🍄"},{word:"NOTEBOOK",icon:"📓"},
+        {word:"BACKPACK",icon:"🎒"},{word:"SCISSORS",icon:"✂️"},{word:"TEACHER",icon:"🧑‍🏫"},{word:"PAINTER",icon:"🧑‍🎨"},
+        {word:"SINGING",icon:"🎤"},{word:"DANCING",icon:"💃"},{word:"FOOTBALL",icon:"⚽"},{word:"BASEBALL",icon:"⚾"},
+        {word:"SWIMMING",icon:"🏊"},{word:"HOSPITAL",icon:"🏥"},{word:"PHARMACY",icon:"💊"},{word:"AIRPORT",icon:"✈️"},
+        {word:"DINOSAUR",icon:"🦖"},{word:"UNICORN",icon:"🦄"},{word:"MONSTER",icon:"👾"},{word:"FIREWORKS",icon:"🎆"},
+        {word:"TELESCOPE",icon:"🔭"},{word:"MICROSCOPE",icon:"🔬"},{word:"COMPASS",icon:"🧭"},{word:"SANDWICH",icon:"🥪"},
+        {word:"CHOCOLATE",icon:"🍫"},{word:"BUTTERFLY",icon:"🦋"},{word:"LADYBUG",icon:"🐞"}
+      ]
+    };
+
+    let selectedHintMode = 'trace';
+    let currentLevel = 1;
+    let questions = [];
+    let currentIndex = 0;
+    let currentAnswer = [];
+    let starsCount = 0;
+
+    function setHintMode(mode, btnElement) {
+      selectedHintMode = mode;
+      document.querySelectorAll('.hint-btn').forEach(b => b.classList.remove('active'));
+      btnElement.classList.add('active');
+    }
+
+    function startLevel(lvl) {
+      currentLevel = lvl;
+      questions = [...levelData[lvl]].sort(() => Math.random() - 0.5);
+      currentIndex = 0;
+      
+      document.getElementById('menuScreen').style.display = 'none';
+      document.getElementById('gameScreen').style.display = 'block';
+      initQuestion();
+    }
+
+    function showMenu() {
+      document.getElementById('gameScreen').style.display = 'none';
+      document.getElementById('menuScreen').style.display = 'block';
+      updateMascot("🐻", "加油喔！");
+    }
+
+    function updateMascot(emoji, text) {
+      document.getElementById('mascotIcon').textContent = emoji;
+      document.getElementById('mascotBubble').textContent = text;
+    }
+
+    function initQuestion() {
+      const q = questions[currentIndex];
+      document.getElementById('imageDisplay').textContent = q.icon;
+      document.getElementById('nextBtn').style.display = 'none';
+      document.getElementById('correctBadge').classList.remove('show');
+      document.getElementById('progress
