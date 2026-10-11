@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>幼兒英文單字學習遊戲</title>
+  <title>幼兒英文單字學習遊戲 (雙語對照版)</title>
   <style>
     * {
       box-sizing: border-box;
@@ -12,7 +12,7 @@
       -webkit-tap-highlight-color: transparent;
     }
     body {
-      font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+      font-family: 'Comic Sans MS', 'Chalkboard SE', 'Microsoft JhengHei', sans-serif;
       background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
       display: flex;
       flex-direction: column;
@@ -160,8 +160,8 @@
       color: #495057;
     }
 
+    /* 圖片與中文顯示區域 */
     .image-container {
-      font-size: 95px;
       background: #fff9db;
       border: 4px dashed #ffd43b;
       border-radius: 24px;
@@ -169,17 +169,33 @@
       cursor: pointer;
       touch-action: manipulation;
     }
+    .image-icon {
+      font-size: 85px;
+      line-height: 1;
+    }
+    .chinese-hint {
+      font-size: 22px;
+      font-weight: bold;
+      color: #d9480f;
+      margin-top: 4px;
+    }
     .hint-text {
       color: #868e96;
       font-size: 13px;
       margin-top: 4px;
     }
 
+    .answer-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 20px 0;
+    }
     .answer-container {
       display: flex;
       justify-content: center;
       gap: 8px;
-      margin: 20px 0;
       flex-wrap: wrap;
     }
     .slot {
@@ -194,6 +210,8 @@
       justify-content: center;
       background-color: #f1f3f5;
       border-radius: 10px 10px 0 0;
+      cursor: pointer;
+      transition: all 0.15s;
     }
     .slot.show-trace {
       color: rgba(25, 113, 194, 0.25);
@@ -201,427 +219,8 @@
     .slot.filled {
       color: #1971c2 !important;
       background-color: #e7f5ff;
+      border-bottom-color: #1971c2;
     }
 
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      20%, 60% { transform: translateX(-8px); }
-      40%, 80% { transform: translateX(8px); }
-    }
-    .shake { animation: shake 0.4s ease-in-out; }
-
-    .letters-container {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    .letter-btn {
-      width: 52px;
-      height: 52px;
-      color: white;
-      font-size: 28px;
-      font-weight: bold;
-      border: none;
-      border-radius: 16px;
-      cursor: pointer;
-      touch-action: manipulation;
-    }
-    .letter-btn:nth-child(5n+1) { background-color: #ff6b6b; box-shadow: 0 5px 0 #c92a2a; }
-    .letter-btn:nth-child(5n+2) { background-color: #4c6ef5; box-shadow: 0 5px 0 #364fc7; }
-    .letter-btn:nth-child(5n+3) { background-color: #51cf66; box-shadow: 0 5px 0 #2b8a3e; }
-    .letter-btn:nth-child(5n+4) { background-color: #fcc419; box-shadow: 0 5px 0 #e67700; color: #333; }
-    .letter-btn:nth-child(5n+5) { background-color: #cc5de8; box-shadow: 0 5px 0 #862e9c; }
-    .letter-btn.disabled { visibility: hidden; }
-
-    .next-btn {
-      margin-top: 15px;
-      padding: 12px 32px;
-      font-size: 20px;
-      font-weight: bold;
-      background: linear-gradient(180deg, #51cf66 0%, #2b8a3e 100%);
-      color: white;
-      border: none;
-      border-radius: 30px;
-      box-shadow: 0 5px 0 #2b8a3e;
-      cursor: pointer;
-      display: none;
-      touch-action: manipulation;
-    }
-  </style>
-</head>
-<body>
-
-  <div class="game-card">
-    <div id="correctBadge" class="correct-badge">Super Star! 🌟</div>
-
-    <div class="header-bar">
-      <div class="mascot" id="mascotBtn">🐻</div>
-      <div id="mascotBubble" style="font-size: 14px; font-weight: bold; color: #495057;">加油喔！</div>
-      <div class="score-board">⭐ <span id="starScore">0</span></div>
-    </div>
-
-    <!-- 主選單 -->
-    <div id="menuScreen">
-      <h2>請選擇學習關卡 🎯</h2>
-
-      <div class="hint-selector-box">
-        <label>💡 請選擇提示輔助模式：</label>
-        <div class="hint-options">
-          <button class="hint-btn active" data-hint="trace">🔤 全字母虛線</button>
-          <button class="hint-btn" data-hint="partial">🧩 部分字母虛線</button>
-          <button class="hint-btn" data-hint="audio">🔊 純語音提示</button>
-          <button class="hint-btn" data-hint="none">🎯 無提示挑戰</button>
-        </div>
-      </div>
-
-      <div class="level-menu">
-        <button class="level-btn lvl-1" data-lvl="1">Level 1: 幼兒入門 (3字母) <span>50題</span></button>
-        <button class="level-btn lvl-2" data-lvl="2">Level 2: 基礎進階 (4字母) <span>55題</span></button>
-        <button class="level-btn lvl-3" data-lvl="3">Level 3: 中級探索 (5字母) <span>50題</span></button>
-        <button class="level-btn lvl-4" data-lvl="4">Level 4: 高級挑戰 (6+字母) <span>50題</span></button>
-        <button class="level-btn lvl-5" data-lvl="5">Level 5: 英語小達人 (綜合) <span>50題</span></button>
-      </div>
-    </div>
-
-    <!-- 遊戲畫面 -->
-    <div id="gameScreen" style="display: none;">
-      <div class="top-bar">
-        <button class="back-btn" id="backBtn">➔ 返回選單</button>
-        <span class="progress-text" id="progressText">第 1 / 50 題</span>
-      </div>
-
-      <div class="image-container" id="imageDisplay">🐱</div>
-      <div class="hint-text">點擊圖片聽正確發音</div>
-
-      <div class="answer-container" id="answerSlots"></div>
-      <div class="letters-container" id="letterPool"></div>
-
-      <button class="next-btn" id="nextBtn">下一題 ➔</button>
-    </div>
-  </div>
-
-  <script>
-    var levelData = {
-      1: [
-        {word:"CAT",icon:"🐱"},{word:"DOG",icon:"🐶"},{word:"PIG",icon:"🐷"},{word:"COW",icon:"🐮"},
-        {word:"FOX",icon:"🦊"},{word:"SUN",icon:"☀️"},{word:"BUS",icon:"🚌"},{word:"BED",icon:"🛏️"},
-        {word:"CUP",icon:"🥤"},{word:"HAT",icon:"🧢"},{word:"EGG",icon:"🥚"},{word:"ICE",icon:"🧊"},
-        {word:"BOX",icon:"📦"},{word:"BAG",icon:"🎒"},{word:"MAP",icon:"🗺️"},{word:"PEN",icon:"🖊️"},
-        {word:"CAR",icon:"🚗"},{word:"BOY",icon:"👦"},{word:"KEY",icon:"🔑"},{word:"FAN",icon:"🪭"},
-        {word:"ANT",icon:"🐜"},{word:"BAT",icon:"🦇"},{word:"BEE",icon:"🐝"},{word:"OWL",icon:"🦉"},
-        {word:"RAT",icon:"🐀"},{word:"JAM",icon:"🥫"},{word:"NUT",icon:"🥜"},{word:"PIE",icon:"🥧"},
-        {word:"TEA",icon:"🍵"},{word:"CAN",icon:"🥫"},{word:"PIN",icon:"📌"},{word:"NET",icon:"🕸️"},
-        {word:"LIP",icon:"👄"},{word:"LEG",icon:"🦵"},{word:"ARM",icon:"🦾"},{word:"EYE",icon:"👁️"},
-        {word:"BUG",icon:"🐛"},{word:"FLY",icon:"🪰"},{word:"GEM",icon:"💎"},{word:"WEB",icon:"🕸️"},
-        {word:"MOP",icon:"🧹"},{word:"TOP",icon:"🪵"},{word:"BOW",icon:"🏹"},{word:"LOG",icon:"🪵"},
-        {word:"POT",icon:"🏺"},{word:"JUG",icon:"🏺"},{word:"TAG",icon:"🏷️"},{word:"CAP",icon:"🧢"},
-        {word:"SIT",icon:"🪑"},{word:"RUN",icon:"🏃"}
-      ],
-      2: [
-        {word:"DUCK",icon:"🦆"},{word:"BIRD",icon:"🐦"},{word:"FISH",icon:"🐟"},{word:"FROG",icon:"🐸"},
-        {word:"BEAR",icon:"🐻"},{word:"MILK",icon:"🥛"},{word:"CAKE",icon:"🎂"},{word:"CORN",icon:"🌽"},
-        {word:"RICE",icon:"🍚"},{word:"MOON",icon:"🌙"},{word:"STAR",icon:"⭐"},{word:"TREE",icon:"🌳"},
-        {word:"SHIP",icon:"🚢"},{word:"BOOK",icon:"📖"},{word:"BALL",icon:"⚽"},{word:"LION",icon:"🦁"},
-        {word:"DEER",icon:"🦌"},{word:"GOAT",icon:"🐐"},{word:"WOLF",icon:"🐺"},{word:"SEAL",icon:"🦭"},
-        {word:"SOUP",icon:"🍲"},{word:"MEAT",icon:"🥩"},{word:"PEAR",icon:"🍐"},{word:"KIWI",icon:"🥝"},
-        {word:"LEAF",icon:"🍃"},{word:"ROSE",icon:"🌹"},{word:"WIND",icon:"🌬️"},{word:"SNOW",icon:"❄️"},
-        {word:"RAIN",icon:"🌧️"},{word:"FIRE",icon:"🔥"},{word:"BOAT",icon:"⛵"},{word:"BIKE",icon:"🚲"},
-        {word:"TAXI",icon:"🚕"},{word:"RING",icon:"💍"},{word:"DOLL",icon:"🧸"},{word:"KITE",icon:"🪁"},
-        {word:"DRUM",icon:"🥁"},{word:"LAMP",icon:"💡"},{word:"DOOR",icon:"🚪"},{word:"SHIRT",icon:"👕"},
-        {word:"SOCK",icon:"🧦"},{word:"SHOE",icon:"👞"},{word:"HAND",icon:"✋"},{word:"FOOT",icon:"🦶"},
-        {word:"FACE",icon:"😀"},{word:"NOSE",icon:"👃"},{word:"HAIR",icon:"💇"},{word:"BABY",icon:"👶"},
-        {word:"KING",icon:"👑"},{word:"GIFT",icon:"🎁"},{word:"COIN",icon:"🪙"},{word:"PARK",icon:"🏞️"},
-        {word:"HOME",icon:"🏠"},{word:"FARM",icon:"🚜"},{word:"BELL",icon:"🔔"}
-      ],
-      3: [
-        {word:"APPLE",icon:"🍎"},{word:"PIZZA",icon:"🍕"},{word:"TIGER",icon:"🐯"},{word:"ZEBRA",icon:"🦓"},
-        {word:"PANDA",icon:"🐼"},{word:"CAMEL",icon:"🐫"},{word:"KOALA",icon:"🐨"},{word:"SNAKE",icon:"🐍"},
-        {word:"WHALE",icon:"🐳"},{word:"SHARK",icon:"🦈"},{word:"HOUSE",icon:"🏠"},{word:"TRAIN",icon:"🚆"},
-        {word:"PLANE",icon:"✈️"},{word:"CLOCK",icon:"⏰"},{word:"CHAIR",icon:"🪑"},{word:"TABLE",icon:"🪵"},
-        {word:"PHONE",icon:"📱"},{word:"BREAD",icon:"🍞"},{word:"CANDY",icon:"🍬"},{word:"DONUT",icon:"🍩"},{word:"LEMON",icon:"🍋"},
-        {word:"PEACH",icon:"🍑"},{word:"MELON",icon:"🍈"},{word:"MANGO",icon:"🥭"},{word:"GRAPE",icon:"🍇"},
-        {word:"PLANT",icon:"🪴"},{word:"GRASS",icon:"🌱"},{word:"WATER",icon:"💧"},{word:"EARTH",icon:"🌍"},
-        {word:"BEACH",icon:"🏖️"},{word:"CLOUD",icon:"☁️"},{word:"STORM",icon:"🌩️"},{word:"SKIRT",icon:"👗"},
-        {word:"DRESS",icon:"👗"},{word:"JEANS",icon:"👖"},{word:"BOOTS",icon:"👢"},{word:"CROWN",icon:"👑"},
-        {word:"ROBOT",icon:"🤖"},{word:"MUSIC",icon:"🎵"},{word:"RADIO",icon:"📻"},{word:"PAPER",icon:"📄"},
-        {word:"SPOON",icon:"🥄"},{word:"KNIFE",icon:"🔪"},{word:"RULER",icon:"📏"},{word:"HEART",icon:"❤️"},
-        {word:"SMILE",icon:"😊"},{word:"GIRL",icon:"👧"},{word:"ANGEL",icon:"👼"}
-      ],
-      4: [
-        {word:"BANANA",icon:"🍌"},{word:"MONKEY",icon:"🐒"},{word:"RABBIT",icon:"🐰"},{word:"TURTLE",icon:"🐢"},
-        {word:"SPIDER",icon:"🕷️"},{word:"DONKEY",icon:"🫏"},{word:"PARROT",icon:"🦜"},{word:"TOMATO",icon:"🍅"},
-        {word:"POTATO",icon:"🥔"},{word:"CARROT",icon:"🥕"},{word:"CHEESE",icon:"🧀"},{word:"COOKIE",icon:"🍪"},
-        {word:"BURGER",icon:"🍔"},{word:"BUTTER",icon:"🧈"},{word:"ROCKET",icon:"🚀"},{word:"GUITAR",icon:"🎸"},
-        {word:"VIOLIN",icon:"🎻"},{word:"WINDOW",icon:"🪟"},{word:"PENCIL",icon:"✏️"},{word:"CAMERA",icon:"📷"},
-        {word:"FLOWER",icon:"🌸"},{word:"FOREST",icon:"🌲"},{word:"SUNNY",icon:"☀️"},{word:"JACKET",icon:"🧥"},
-        {word:"SHORTS",icon:"🩳"},{word:"DOCTOR",icon:"🧑‍⚕️"},{word:"POLICE",icon:"👮"},{word:"FAMILY",icon:"👨‍👩‍👧"},
-        {word:"MOTHER",icon:"👩"},{word:"FATHER",icon:"👨"},{word:"SISTER",icon:"👧"},{word:"SCHOOL",icon:"🏫"},
-        {word:"MARKET",icon:"🛒"},{word:"DRAGON",icon:"🐉"},{word:"CIRCUS",icon:"🎪"},{word:"PIRATE",icon:"🏴‍☠️"},
-        {word:"WIZARD",icon:"🧙"},{word:"CASTLE",icon:"🏰"},{word:"BRIDGE",icon:"🌉"},{word:"ISLAND",icon:"🏝️"},
-        {word:"DESERT",icon:"🏜️"},{word:"WINTER",icon:"❄️"},{word:"SUMMER",icon:"🏖️"},{word:"SPRING",icon:"🌸"}
-      ],
-      5: [
-        {word:"GIRAFFE",icon:"🦒"},{word:"ELEPHANT",icon:"🐘"},{word:"DOLPHIN",icon:"🐬"},{word:"OCTOPUS",icon:"🐙"},
-        {word:"RAINBOW",icon:"🌈"},{word:"AVOCADO",icon:"🥑"},{word:"POPCORN",icon:"🍿"},{word:"PANCAKE",icon:"🥞"},
-        {word:"BICYCLE",icon:"🚲"},{word:"TRACTOR",icon:"🚜"},{word:"SCOOTER",icon:"🛴"},{word:"COMPUTER",icon:"💻"},
-        {word:"UMBRELLA",icon:"☂️"},{word:"BALLOON",icon:"🎈"},{word:"FEATHER",icon:"🪶"},{word:"VOLCANO",icon:"🌋"},
-        {word:"MOUNTAIN",icon:"⛰️"},{word:"SUNFLOWER",icon:"🌻"},{word:"MUSHROOM",icon:"🍄"},{word:"NOTEBOOK",icon:"📓"},
-        {word:"BACKPACK",icon:"🎒"},{word:"SCISSORS",icon:"✂️"},{word:"TEACHER",icon:"🧑‍🏫"},{word:"PAINTER",icon:"🧑‍🎨"},
-        {word:"SINGING",icon:"🎤"},{word:"DANCING",icon:"💃"},{word:"FOOTBALL",icon:"⚽"},{word:"BASEBALL",icon:"⚾"},
-        {word:"SWIMMING",icon:"🏊"},{word:"HOSPITAL",icon:"🏥"},{word:"PHARMACY",icon:"💊"},{word:"AIRPORT",icon:"✈️"},
-        {word:"DINOSAUR",icon:"🦖"},{word:"UNICORN",icon:"🦄"},{word:"MONSTER",icon:"👾"},{word:"FIREWORKS",icon:"🎆"},
-        {word:"TELESCOPE",icon:"🔭"},{word:"MICROSCOPE",icon:"🔬"},{word:"COMPASS",icon:"🧭"},{word:"SANDWICH",icon:"🥪"},
-        {word:"CHOCOLATE",icon:"🍫"},{word:"BUTTERFLY",icon:"🦋"},{word:"LADYBUG",icon:"🐞"}
-      ]
-    };
-
-    var selectedHintMode = 'trace';
-    var currentLevel = 1;
-    var questions = [];
-    var currentIndex = 0;
-    var currentAnswer = [];
-    var starsCount = 0;
-
-    // 頁面加載完成後自動綁定事件監聽器
-    document.addEventListener("DOMContentLoaded", function() {
-      // 綁定提示模式按鈕
-      var hintBtns = document.querySelectorAll('.hint-btn');
-      hintBtns.forEach(function(btn) {
-        btn.addEventListener('click', function() {
-          hintBtns.forEach(function(b) { b.classList.remove('active'); });
-          btn.classList.add('active');
-          selectedHintMode = btn.getAttribute('data-hint');
-        });
-      });
-
-      // 綁定關卡按鈕
-      var levelBtns = document.querySelectorAll('.level-btn');
-      levelBtns.forEach(function(btn) {
-        btn.addEventListener('click', function() {
-          var lvl = parseInt(btn.getAttribute('data-lvl'));
-          startLevel(lvl);
-        });
-      });
-
-      // 綁定其它按鈕
-      document.getElementById('backBtn').addEventListener('click', showMenu);
-      document.getElementById('imageDisplay').addEventListener('click', speakCurrentWord);
-      document.getElementById('nextBtn').addEventListener('click', loadNextQuestion);
-      document.getElementById('mascotBtn').addEventListener('click', function() {
-        speakText('Hello! Let us play together!');
-      });
-    });
-
-    function startLevel(lvl) {
-      currentLevel = lvl;
-      var raw = levelData[lvl] || levelData[1];
-      questions = raw.slice().sort(function() { return Math.random() - 0.5; });
-      currentIndex = 0;
-      
-      document.getElementById('menuScreen').style.display = 'none';
-      document.getElementById('gameScreen').style.display = 'block';
-      initQuestion();
-    }
-
-    function showMenu() {
-      document.getElementById('gameScreen').style.display = 'none';
-      document.getElementById('menuScreen').style.display = 'block';
-      updateMascot("🐻", "加油喔！");
-    }
-
-    function updateMascot(emoji, text) {
-      document.getElementById('mascotBtn').textContent = emoji;
-      document.getElementById('mascotBubble').textContent = text;
-    }
-
-    function initQuestion() {
-      var q = questions[currentIndex];
-      if (!q) return;
-
-      document.getElementById('imageDisplay').textContent = q.icon;
-      document.getElementById('nextBtn').style.display = 'none';
-      document.getElementById('correctBadge').classList.remove('show');
-      document.getElementById('progressText').textContent = "第 " + (currentIndex + 1) + " / " + questions.length + " 題";
-      currentAnswer = [];
-
-      updateMascot("🐻", "一起拼出來吧！");
-
-      if (selectedHintMode !== 'none') {
-        speakCurrentWord();
-      }
-
-      var slotsContainer = document.getElementById('answerSlots');
-      slotsContainer.innerHTML = '';
-      slotsContainer.classList.remove('shake');
-      
-      for (var i = 0; i < q.word.length; i++) {
-        var slot = document.createElement('div');
-        slot.className = 'slot';
-        
-        var showLetter = false;
-        if (selectedHintMode === 'trace') showLetter = true;
-        else if (selectedHintMode === 'partial') {
-          if (i === 0) showLetter = true;
-          else if (q.word.length >= 5 && i % 2 === 0) showLetter = true;
-        }
-
-        if (showLetter) {
-          slot.textContent = q.word[i];
-          slot.classList.add('show-trace');
-        } else {
-          slot.textContent = '';
-        }
-        
-        slotsContainer.appendChild(slot);
-      }
-
-      var letters = q.word.split('');
-      var extraCount = currentLevel >= 3 ? 3 : 2;
-      for (var j = 0; j < extraCount; j++) {
-        letters.push(String.fromCharCode(65 + Math.floor(Math.random() * 26)));
-      }
-      letters.sort(function() { return Math.random() - 0.5; });
-
-      var poolContainer = document.getElementById('letterPool');
-      poolContainer.innerHTML = '';
-      for (var k = 0; k < letters.length; k++) {
-        (function(char) {
-          var btn = document.createElement('button');
-          btn.className = 'letter-btn';
-          btn.textContent = char;
-          btn.addEventListener('click', function() { selectLetter(btn, char); });
-          poolContainer.appendChild(btn);
-        })(letters[k]);
-      }
-    }
-
-    function selectLetter(btn, char) {
-      var targetWord = questions[currentIndex].word;
-      if (currentAnswer.length < targetWord.length) {
-        currentAnswer.push(char);
-        btn.classList.add('disabled');
-        
-        triggerHaptic(15);
-        speakText(char);
-
-        var slots = document.querySelectorAll('.slot');
-        var activeSlot = slots[currentAnswer.length - 1];
-        if (activeSlot) {
-          activeSlot.textContent = char;
-          activeSlot.classList.add('filled');
-        }
-
-        if (currentAnswer.length === targetWord.length) {
-          checkAnswer();
-        }
-      }
-    }
-
-    function checkAnswer() {
-      var userWord = currentAnswer.join('');
-      var targetWord = questions[currentIndex].word;
-      var slotsContainer = document.getElementById('answerSlots');
-
-      if (userWord === targetWord) {
-        starsCount += 1;
-        document.getElementById('starScore').textContent = starsCount;
-        updateMascot("🥳", "超級厲害！");
-
-        playTone(523.25, 0.15);
-        setTimeout(function() { playTone(659.25, 0.25); }, 150);
-
-        triggerHaptic([30, 50, 30]);
-        document.getElementById('correctBadge').classList.add('show');
-
-        setTimeout(function() {
-          speakText("Amazing! " + targetWord);
-          document.getElementById('nextBtn').style.display = 'inline-block';
-        }, 300);
-      } else {
-        updateMascot("💪", "加油！再試一次！");
-        playTone(196.00, 0.3);
-        slotsContainer.classList.add('shake');
-        triggerHaptic([100, 50, 100]);
-
-        setTimeout(function() {
-          speakText("Try again!");
-          resetCurrentQuestion();
-        }, 600);
-      }
-    }
-
-    function resetCurrentQuestion() {
-      var targetWord = questions[currentIndex].word;
-      currentAnswer = [];
-      var slotsContainer = document.getElementById('answerSlots');
-      slotsContainer.classList.remove('shake');
-
-      var slots = document.querySelectorAll('.slot');
-      for (var i = 0; i < slots.length; i++) {
-        var showLetter = false;
-        if (selectedHintMode === 'trace') showLetter = true;
-        else if (selectedHintMode === 'partial') {
-          if (i === 0) showLetter = true;
-          else if (targetWord.length >= 5 && i % 2 === 0) showLetter = true;
-        }
-
-        slots[i].textContent = showLetter ? targetWord[i] : '';
-        slots[i].classList.remove('filled');
-      }
-
-      var btns = document.querySelectorAll('.letter-btn');
-      for (var j = 0; j < btns.length; j++) {
-        btns[j].classList.remove('disabled');
-      }
-    }
-
-    function loadNextQuestion() {
-      currentIndex = (currentIndex + 1) % questions.length;
-      initQuestion();
-    }
-
-    function playTone(freq, duration) {
-      try {
-        var AudioContext = window.AudioContext || window.webkitAudioContext;
-        if (!AudioContext) return;
-        var ctx = new AudioContext();
-        var osc = ctx.createOscillator();
-        var gain = ctx.createGain();
-        osc.type = 'sine';
-        osc.frequency.value = freq;
-        gain.gain.setValueAtTime(0.1, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start();
-        osc.stop(ctx.currentTime + duration);
-      } catch (e) {}
-    }
-
-    function triggerHaptic(pattern) {
-      try {
-        if ('vibrate' in navigator) navigator.vibrate(pattern);
-      } catch (e) {}
-    }
-
-    function speakText(text) {
-      try {
-        if ('speechSynthesis' in window) {
-          window.speechSynthesis.cancel();
-          var utterance = new SpeechSynthesisUtterance(text.toLowerCase());
-          utterance.lang = 'en-US';
-          utterance.rate = 0.8;
-          window.speechSynthesis.speak(utterance);
-        }
-      } catch (e) {}
-    }
-
-    function speakCurrentWord() {
-      if (questions[currentIndex]) {
-        speakText(questions[currentIndex].word);
-      }
-    }
-  </script>
-</body>
-</html>
+    .delete-btn {
+      width: 44px;
