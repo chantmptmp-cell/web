@@ -3,9 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>幼兒英文單字童趣多感官遊戲</title>
-  <!-- 引入免費彩帶動畫庫 -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <title>幼兒英文單字多感官學習遊戲</title>
   <style>
     * {
       box-sizing: border-box;
@@ -57,7 +55,7 @@
       transform: translate(-50%, -50%) scale(1.1);
     }
 
-    /* 吉祥物與計分板欄位 */
+    /* 頂部吉祥物與計分板 */
     .header-bar {
       display: flex;
       justify-content: space-between;
@@ -179,7 +177,6 @@
       padding: 10px;
       cursor: pointer;
       transition: transform 0.2s;
-      box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
     }
     .image-container:active { transform: scale(0.95); }
     .hint-text {
@@ -226,7 +223,7 @@
     }
     .shake { animation: shake 0.4s ease-in-out; }
 
-    /* 繽紛彩虹字母塊 */
+    /* 繽紛字母按鈕 */
     .letters-container {
       display: flex;
       justify-content: center;
@@ -244,7 +241,6 @@
       cursor: pointer;
       transition: all 0.1s;
     }
-    /* 彩虹配色循環 */
     .letter-btn:nth-child(5n+1) { background-color: #ff6b6b; box-shadow: 0 5px 0 #c92a2a; }
     .letter-btn:nth-child(5n+2) { background-color: #4c6ef5; box-shadow: 0 5px 0 #364fc7; }
     .letter-btn:nth-child(5n+3) { background-color: #51cf66; box-shadow: 0 5px 0 #2b8a3e; }
@@ -277,14 +273,13 @@
   <div class="game-card">
     <div id="correctBadge" class="correct-badge">Super Star! 🌟</div>
 
-    <!-- 頂部吉祥物與得分 -->
     <div class="header-bar">
       <div class="mascot" id="mascotIcon" onclick="speakText('I love learning english with you!')">🐻</div>
       <div id="mascotBubble" style="font-size: 14px; font-weight: bold; color: #495057;">加油喔！</div>
       <div class="score-board">⭐ <span id="starScore">0</span></div>
     </div>
 
-    <!-- 主選單：難度與提示設定 -->
+    <!-- 主選單 -->
     <div id="menuScreen">
       <h2>請選擇學習關卡 🎯</h2>
 
@@ -357,85 +352,4 @@
         {word:"KING",icon:"👑"},{word:"GIFT",icon:"🎁"},{word:"COIN",icon:"🪙"},{word:"PARK",icon:"🏞️"},
         {word:"HOME",icon:"🏠"},{word:"FARM",icon:"🚜"},{word:"BELL",icon:"🔔"}
       ],
-      3: [
-        {word:"APPLE",icon:"🍎"},{word:"PIZZA",icon:"🍕"},{word:"TIGER",icon:"🐯"},{word:"ZEBRA",icon:"🦓"},
-        {word:"PANDA",icon:"🐼"},{word:"CAMEL",icon:"🐫"},{word:"KOALA",icon:"🐨"},{word:"SNAKE",icon:"🐍"},
-        {word:"WHALE",icon:"🐳"},{word:"SHARK",icon:"🦈"},{word:"HOUSE",icon:"🏠"},{word:"TRAIN",icon:"🚆"},
-        {word:"PLANE",icon:"✈️"},{word:"CLOCK",icon:"⏰"},{word:"CHAIR",icon:"🪑"},{word:"TABLE",icon:"🪵"},
-        {word:"PHONE",icon:"📱"},{word:"BREAD",icon:"🍞"},{word:"CANDY",icon:"🍬"},{word:"DONUT",icon:"🍩"},{word:"LEMON",icon:"🍋"},
-        {word:"PEACH",icon:"🍑"},{word:"MELON",icon:"🍈"},{word:"MANGO",icon:"🥭"},{word:"GRAPE",icon:"🍇"},
-        {word:"PLANT",icon:"🪴"},{word:"GRASS",icon:"🌱"},{word:"WATER",icon:"💧"},{word:"EARTH",icon:"🌍"},
-        {word:"BEACH",icon:"🏖️"},{word:"CLOUD",icon:"☁️"},{word:"STORM",icon:"🌩️"},{word:"SKIRT",icon:"👗"},
-        {word:"DRESS",icon:"👗"},{word:"JEANS",icon:"👖"},{word:"BOOTS",icon:"👢"},{word:"CROWN",icon:"👑"},
-        {word:"ROBOT",icon:"🤖"},{word:"MUSIC",icon:"🎵"},{word:"RADIO",icon:"📻"},{word:"PAPER",icon:"📄"},
-        {word:"SPOON",icon:"🥄"},{word:"KNIFE",icon:"🔪"},{word:"RULER",icon:"📏"},{word:"HEART",icon:"❤️"},
-        {word:"SMILE",icon:"😊"},{word:"GIRL",icon:"👧"},{word:"ANGEL",icon:"👼"}
-      ],
-      4: [
-        {word:"BANANA",icon:"🍌"},{word:"MONKEY",icon:"🐒"},{word:"RABBIT",icon:"🐰"},{word:"TURTLE",icon:"🐢"},
-        {word:"SPIDER",icon:"🕷️"},{word:"DONKEY",icon:"🫏"},{word:"PARROT",icon:"🦜"},{word:"TOMATO",icon:"🍅"},
-        {word:"POTATO",icon:"🥔"},{word:"CARROT",icon:"🥕"},{word:"CHEESE",icon:"🧀"},{word:"COOKIE",icon:"🍪"},
-        {word:"BURGER",icon:"🍔"},{word:"BUTTER",icon:"🧈"},{word:"ROCKET",icon:"🚀"},{word:"GUITAR",icon:"🎸"},
-        {word:"VIOLIN",icon:"🎻"},{word:"WINDOW",icon:"🪟"},{word:"PENCIL",icon:"✏️"},{word:"CAMERA",icon:"📷"},
-        {word:"FLOWER",icon:"🌸"},{word:"FOREST",icon:"🌲"},{word:"SUNNY",icon:"☀️"},{word:"JACKET",icon:"🧥"},
-        {word:"SHORTS",icon:"🩳"},{word:"DOCTOR",icon:"🧑‍⚕️"},{word:"POLICE",icon:"👮"},{word:"FAMILY",icon:"👨‍👩‍👧"},
-        {word:"MOTHER",icon:"👩"},{word:"FATHER",icon:"👨"},{word:"SISTER",icon:"👧"},{word:"SCHOOL",icon:"🏫"},
-        {word:"MARKET",icon:"🛒"},{word:"DRAGON",icon:"🐉"},{word:"CIRCUS",icon:"🎪"},{word:"PIRATE",icon:"🏴‍☠️"},
-        {word:"WIZARD",icon:"🧙"},{word:"CASTLE",icon:"🏰"},{word:"BRIDGE",icon:"🌉"},{word:"ISLAND",icon:"🏝️"},
-        {word:"DESERT",icon:"🏜️"},{word:"WINTER",icon:"❄️"},{word:"SUMMER",icon:"🏖️"},{word:"SPRING",icon:"🌸"}
-      ],
-      5: [
-        {word:"GIRAFFE",icon:"🦒"},{word:"ELEPHANT",icon:"🐘"},{word:"DOLPHIN",icon:"🐬"},{word:"OCTOPUS",icon:"🐙"},
-        {word:"RAINBOW",icon:"🌈"},{word:"AVOCADO",icon:"🥑"},{word:"POPCORN",icon:"🍿"},{word:"PANCAKE",icon:"🥞"},
-        {word:"BICYCLE",icon:"🚲"},{word:"TRACTOR",icon:"🚜"},{word:"SCOOTER",icon:"🛴"},{word:"COMPUTER",icon:"💻"},
-        {word:"UMBRELLA",icon:"☂️"},{word:"BALLOON",icon:"🎈"},{word:"FEATHER",icon:"🪶"},{word:"VOLCANO",icon:"🌋"},
-        {word:"MOUNTAIN",icon:"⛰️"},{word:"SUNFLOWER",icon:"🌻"},{word:"MUSHROOM",icon:"🍄"},{word:"NOTEBOOK",icon:"📓"},
-        {word:"BACKPACK",icon:"🎒"},{word:"SCISSORS",icon:"✂️"},{word:"TEACHER",icon:"🧑‍🏫"},{word:"PAINTER",icon:"🧑‍🎨"},
-        {word:"SINGING",icon:"🎤"},{word:"DANCING",icon:"💃"},{word:"FOOTBALL",icon:"⚽"},{word:"BASEBALL",icon:"⚾"},
-        {word:"SWIMMING",icon:"🏊"},{word:"HOSPITAL",icon:"🏥"},{word:"PHARMACY",icon:"💊"},{word:"AIRPORT",icon:"✈️"},
-        {word:"DINOSAUR",icon:"🦖"},{word:"UNICORN",icon:"🦄"},{word:"MONSTER",icon:"👾"},{word:"FIREWORKS",icon:"🎆"},
-        {word:"TELESCOPE",icon:"🔭"},{word:"MICROSCOPE",icon:"🔬"},{word:"COMPASS",icon:"🧭"},{word:"SANDWICH",icon:"🥪"},
-        {word:"CHOCOLATE",icon:"🍫"},{word:"BUTTERFLY",icon:"🦋"},{word:"LADYBUG",icon:"🐞"}
-      ]
-    };
-
-    let selectedHintMode = 'trace';
-    let currentLevel = 1;
-    let questions = [];
-    let currentIndex = 0;
-    let currentAnswer = [];
-    let starsCount = 0;
-
-    function setHintMode(mode, btnElement) {
-      selectedHintMode = mode;
-      document.querySelectorAll('.hint-btn').forEach(b => b.classList.remove('active'));
-      btnElement.classList.add('active');
-    }
-
-    function startLevel(lvl) {
-      currentLevel = lvl;
-      questions = [...levelData[lvl]].sort(() => Math.random() - 0.5);
-      currentIndex = 0;
-      
-      document.getElementById('menuScreen').style.display = 'none';
-      document.getElementById('gameScreen').style.display = 'block';
-      initQuestion();
-    }
-
-    function showMenu() {
-      document.getElementById('gameScreen').style.display = 'none';
-      document.getElementById('menuScreen').style.display = 'block';
-      updateMascot("🐻", "加油喔！");
-    }
-
-    function updateMascot(emoji, text) {
-      document.getElementById('mascotIcon').textContent = emoji;
-      document.getElementById('mascotBubble').textContent = text;
-    }
-
-    function initQuestion() {
-      const q = questions[currentIndex];
-      document.getElementById('imageDisplay').textContent = q.icon;
-      document.getElementById('nextBtn').style.display = 'none';
-      document.getElementById('correctBadge').classList.remove('show');
-      document.getElementById('progress
+      3:
