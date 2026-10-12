@@ -133,19 +133,20 @@
       text-shadow: 1px 1px 0 #e67700;
     }
 
-    .mode-selector-box {
+    .setting-box {
       background: #f8f9fa;
       border: 2px dashed #bac8ff;
       border-radius: 18px;
       padding: 12px;
-      margin-bottom: 15px;
+      margin-bottom: 12px;
+      text-align: left;
     }
-    .mode-selector-box label {
+    .setting-box label.title {
       font-weight: bold;
       color: #495057;
       display: block;
       margin-bottom: 8px;
-      font-size: 15px;
+      font-size: 14px;
     }
     .mode-options {
       display: grid;
@@ -153,8 +154,8 @@
       gap: 8px;
     }
     .mode-btn {
-      padding: 12px 6px;
-      font-size: 14px;
+      padding: 10px 6px;
+      font-size: 13px;
       font-weight: bold;
       border: 2px solid #ced4da;
       border-radius: 12px;
@@ -170,14 +171,68 @@
       box-shadow: 0 3px 6px rgba(76,110,245,0.3);
     }
 
+    .count-select {
+      width: 100%;
+      padding: 8px 12px;
+      font-size: 14px;
+      font-weight: bold;
+      color: #364fc7;
+      background-color: white;
+      border: 2px solid #74c0fc;
+      border-radius: 12px;
+      outline: none;
+    }
+
+    /* 主題分類選單 */
+    .topics-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      max-height: 180px;
+      overflow-y: auto;
+      padding: 4px;
+      background: #fff;
+      border: 1px solid #dee2e6;
+      border-radius: 12px;
+      margin-top: 6px;
+    }
+    .topic-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: bold;
+      color: #495057;
+      cursor: pointer;
+    }
+    .topic-item input {
+      width: 16px;
+      height: 16px;
+      accent-color: #4c6ef5;
+    }
+    .topic-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 6px;
+    }
+    .action-btn {
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: bold;
+      background: #e9ecef;
+      border: 1px solid #ced4da;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
     .level-menu {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
     }
     .level-btn {
-      padding: 14px 20px;
-      font-size: 17px;
+      padding: 12px 18px;
+      font-size: 16px;
       font-weight: bold;
       color: white;
       border: none;
@@ -193,6 +248,21 @@
     .lvl-3 { background-color: #339af0; box-shadow: 0 4px 0 #1864ab; }
     .lvl-4 { background-color: #20c997; box-shadow: 0 4px 0 #087f5b; }
     .lvl-5 { background-color: #fcc419; color: #333; box-shadow: 0 4px 0 #e67700; }
+
+    .start-game-btn {
+      width: 100%;
+      padding: 14px;
+      font-size: 20px;
+      font-weight: bold;
+      background: linear-gradient(180deg, #51cf66 0%, #2b8a3e 100%);
+      color: white;
+      border: none;
+      border-radius: 20px;
+      box-shadow: 0 5px 0 #2b8a3e;
+      cursor: pointer;
+      margin-top: 10px;
+      touch-action: manipulation;
+    }
 
     .top-bar {
       display: flex;
@@ -419,12 +489,12 @@
       <div class="score-board">⭐ <span id="starScore">0</span></div>
     </div>
 
-    <!-- 主選單 -->
+    <!-- 主選單：階段一 選擇 Level -->
     <div id="menuScreen">
       <h2>請選擇學習關卡 🇬🇧🎯</h2>
 
-      <div class="mode-selector-box">
-        <label>🎮 請選擇遊戲玩法：</label>
+      <div class="setting-box">
+        <label class="title">🎮 請選擇遊戲玩法：</label>
         <div class="mode-options">
           <button class="mode-btn active" data-mode="spelling">🔤 字母拼字模式</button>
           <button class="mode-btn" data-mode="choice">🧩 看圖選單字模式</button>
@@ -432,12 +502,45 @@
       </div>
 
       <div class="level-menu">
-        <button class="level-btn lvl-1" data-lvl="1">Level 1: 啟蒙 (2-3歲 核心認知) <span>25題</span></button>
-        <button class="level-btn lvl-2" data-lvl="2">Level 2: 幼兒 (3-4歲 日常生活) <span>25題</span></button>
-        <button class="level-btn lvl-3" data-lvl="3">Level 3: 幼高 (4-5歲 學校與社區) <span>25題</span></button>
-        <button class="level-btn lvl-4" data-lvl="4">Level 4: 小一 (5-6歲 探索與自然) <span>25題</span></button>
-        <button class="level-btn lvl-5" data-lvl="5">Level 5: 小二 (6-7歲 知識達人) <span>25題</span></button>
+        <button class="level-btn lvl-1" data-lvl="1">Level 1: 啟蒙 (2-3歲) <span>點擊設定 ➔</span></button>
+        <button class="level-btn lvl-2" data-lvl="2">Level 2: 幼兒 (3-4歲) <span>點擊設定 ➔</span></button>
+        <button class="level-btn lvl-3" data-lvl="3">Level 3: 幼高 (4-5歲) <span>點擊設定 ➔</span></button>
+        <button class="level-btn lvl-4" data-lvl="4">Level 4: 小一 (5-6歲) <span>點擊設定 ➔</span></button>
+        <button class="level-btn lvl-5" data-lvl="5">Level 5: 小二 (6-7歲) <span>點擊設定 ➔</span></button>
       </div>
+    </div>
+
+    <!-- 主選單：階段二 自訂題目與主題選單 -->
+    <div id="topicScreen" style="display: none;">
+      <div class="top-bar">
+        <button class="back-btn" id="cancelLevelBtn">➔ 重新選關卡</button>
+        <span class="progress-text" id="selectedLevelTitle">Level 1 設定</span>
+      </div>
+
+      <div class="setting-box">
+        <label class="title">🎲 每次練習題目數量：</label>
+        <select class="count-select" id="customCountSelect">
+          <option value="default">預設關卡題數 (5~25題)</option>
+          <option value="5">每次 5 題</option>
+          <option value="10">每次 10 題</option>
+          <option value="15">每次 15 題</option>
+          <option value="20">每次 20 題</option>
+          <option value="25">每次 25 題</option>
+          <option value="50">每次 50 題</option>
+          <option value="150">挑戰選定主題全部題目</option>
+        </select>
+      </div>
+
+      <div class="setting-box">
+        <label class="title">📚 請勾選練習主題（可複選多項）：</label>
+        <div class="topic-actions">
+          <button class="action-btn" id="selectAllTopicsBtn">全選</button>
+          <button class="action-btn" id="deselectAllTopicsBtn">全不選</button>
+        </div>
+        <div class="topics-container" id="topicsContainer"></div>
+      </div>
+
+      <button class="start-game-btn" id="startGameBtn">🚀 開始練習！</button>
     </div>
 
     <!-- 遊戲畫面 -->
@@ -445,7 +548,7 @@
       <div class="top-bar">
         <button class="back-btn" id="backBtn">➔ 返回選單</button>
         <button class="tool-btn speed-btn" id="speedToggleBtn">語速: 🐇 正常</button>
-        <span class="progress-text" id="progressText">第 1 / 25 題</span>
+        <span class="progress-text" id="progressText">第 1 / 5 題</span>
       </div>
 
       <div class="image-container" id="imageDisplay">
@@ -470,63 +573,142 @@
   </div>
 
   <script>
-    // 依據英式幼兒發展階段 (UK EYFS & Primary National Curriculum) 重新精編單字庫
-    var levelData = {
-      // Level 1: 2-3歲 (Early Years Foundation Stage - 核心認知：身體、家庭、色彩、基本動物)
-      1: [
-        {word:"CAT",icon:"🐱",zh:"貓咪"},{word:"DOG",icon:"🐶",zh:"小狗"},{word:"MUM",icon:"👩",zh:"媽媽"},{word:"DAD",icon:"👨",zh:"爸爸"},
-        {word:"BABY",icon:"👶",zh:"BB"},{word:"EYE",icon:"👁️",zh:"眼睛"},{word:"EAR",icon:"👂",zh:"耳朵"},{word:"NOSE",icon:"👃",zh:"鼻子"},
-        {word:"HAND",icon:"✋",zh:"手掌"},{word:"FOOT",icon:"🦶",zh:"腳掌"},{word:"RED",icon:"🔴",zh:"紅色"},{word:"BLUE",icon:"🔵",zh:"藍色"},
-        {word:"SUN",icon:"☀️",zh:"太陽"},{word:"MOON",icon:"🌙",zh:"月亮"},{word:"STAR",icon:"⭐",zh:"星星"},{word:"MILK",icon:"🥛",zh:"牛奶"},
-        {word:"WATER",icon:"💧",zh:"清水"},{word:"DUCK",icon:"🦆",zh:"鴨子"},{word:"BIRD",icon:"🐦",zh:"小鳥"},{word:"FISH",icon:"🐟",zh:"小魚"},
-        {word:"PIG",icon:"🐷",zh:"小豬"},{word:"COW",icon:"🐮",zh:"乳牛"},{word:"BOY",icon:"👦",zh:"男孩"},{word:"GIRL",icon:"👧",zh:"女孩"},
-        {word:"BALL",icon:"⚽",zh:"皮球"}
-      ],
+    var defaultLevelCounts = { 1: 5, 2: 10, 3: 15, 4: 20, 5: 25 };
 
-      // Level 2: 3-4歲 (Nursery / K1-K2 - 日常食物、衣物、玩具、家居用品)
-      2: [
-        {word:"APPLE",icon:"🍎",zh:"蘋果"},{word:"BANANA",icon:"🍌",zh:"香蕉"},{word:"BISCUIT",icon:"🍪",zh:"餅乾"},{word:"SWEETS",icon:"🍬",zh:"糖果"},
-        {word:"BREAD",icon:"🍞",zh:"麵包"},{word:"CHEESE",icon:"🧀",zh:"芝士"},{word:"WATER",icon:"💧",zh:"飲用水"},{word:"JUMPER",icon:"🧥",zh:"毛衣外套"},
-        {word:"SHOES",icon:"👞",zh:"鞋子"},{word:"SOCKS",icon:"🧦",zh:"襪子"},{word:"HAT",icon:"🧢",zh:"帽子"},{word:"BED",icon:"🛏️",zh:"睡床"},
-        {word:"CHAIR",icon:"🪑",zh:"椅子"},{word:"TABLE",icon:"🪵",zh:"桌子"},{word:"DOOR",icon:"🚪",zh:"大門"},{word:"BOOK",icon:"📖",zh:"書本"},
-        {word:"TOY",icon:"🧸",zh:"玩具"},{word:"DOLL",icon:"🧸",zh:"公仔"},{word:"CAR",icon:"🚗",zh:"汽車"},{word:"BUS",icon:"🚌",zh:"巴士"},
-        {word:"TREE",icon:"🌳",zh:"大樹"},{word:"FLOWER",icon:"🌸",zh:"鮮花"},{word:"RAIN",icon:"🌧️",zh:"下雨"},{word:"HOUSE",icon:"🏠",zh:"房屋"},
-        {word:"PARK",icon:"🏞️",zh:"公園"}
-      ],
+    // 依 Level 與 Topic 細分題庫
+    var levelCategorizedData = {
+      // Level 1: 2-3歲 啟蒙核心詞
+      1: {
+        "身體部位": [
+          {word:"EYE",icon:"👁️",zh:"眼睛"},{word:"EAR",icon:"👂",zh:"耳朵"},{word:"NOSE",icon:"👃",zh:"鼻子"},
+          {word:"HAND",icon:"✋",zh:"手掌"},{word:"FOOT",icon:"🦶",zh:"腳掌"},{word:"LIP",icon:"👄",zh:"嘴唇"},
+          {word:"LEG",icon:"🦵",zh:"大腿"},{word:"ARM",icon:"🦾",zh:"手臂"},{word:"FACE",icon:"😀",zh:"臉龐"},{word:"HAIR",icon:"💇",zh:"頭髮"}
+        ],
+        "家庭成員": [
+          {word:"MUM",icon:"👩",zh:"媽媽"},{word:"DAD",icon:"👨",zh:"爸爸"},{word:"BABY",icon:"👶",zh:"BB"},
+          {word:"BOY",icon:"👦",zh:"男孩"},{word:"GIRL",icon:"👧",zh:"女孩"}
+        ],
+        "基礎動物": [
+          {word:"CAT",icon:"🐱",zh:"貓咪"},{word:"DOG",icon:"🐶",zh:"小狗"},{word:"DUCK",icon:"🦆",zh:"鴨子"},
+          {word:"BIRD",icon:"🐦",zh:"小鳥"},{word:"FISH",icon:"🐟",zh:"小魚"},{word:"PIG",icon:"🐷",zh:"小豬"},
+          {word:"COW",icon:"🐮",zh:"乳牛"},{word:"FOX",icon:"🦊",zh:"狐狸"},{word:"ANT",icon:"🐜",zh:"螞蟻"},
+          {word:"BAT",icon:"🦇",zh:"蝙蝠"},{word:"BEE",icon:"🐝",zh:"蜜蜂"},{word:"OWL",icon:"🦉",zh:"貓頭鷹"},
+          {word:"RAT",icon:"🐀",zh:"老鼠"},{word:"BEAR",icon:"🐻",zh:"大熊"},{word:"FROG",icon:"🐸",zh:"青蛙"},
+          {word:"GOAT",icon:"🐐",zh:"山羊"},{word:"DEER",icon:"🦌",zh:"小鹿"},{word:"LION",icon:"🦁",zh:"獅子"}
+        ],
+        "色彩天氣": [
+          {word:"RED",icon:"🔴",zh:"紅色"},{word:"BLUE",icon:"🔵",zh:"藍色"},{word:"SUN",icon:"☀️",zh:"太陽"},
+          {word:"MOON",icon:"🌙",zh:"月亮"},{word:"STAR",icon:"⭐",zh:"星星"},{word:"RAIN",icon:"🌧️",zh:"下雨"},
+          {word:"SNOW",icon:"❄️",zh:"下雪"},{word:"FIRE",icon:"🔥",zh:"火苗"},{word:"PINK",icon:"🩷",zh:"粉紅"},{word:"GOLD",icon:"🪙",zh:"金色"}
+        ],
+        "日常用品": [
+          {word:"MILK",icon:"🥛",zh:"牛奶"},{word:"WATER",icon:"💧",zh:"清水"},{word:"BALL",icon:"⚽",zh:"皮球"},
+          {word:"BUS",icon:"🚌",zh:"巴士"},{word:"BED",icon:"🛏️",zh:"睡床"},{word:"CUP",icon:"🥤",zh:"水杯"},
+          {word:"HAT",icon:"🧢",zh:"帽子"},{word:"EGG",icon:"🥚",zh:"雞蛋"},{word:"BOX",icon:"📦",zh:"盒子"},
+          {word:"BAG",icon:"🎒",zh:"書包"},{word:"PEN",icon:"🖊️",zh:"原子筆"},{word:"CAR",icon:"🚗",zh:"汽車"},
+          {word:"KEY",icon:"🔑",zh:"鑰匙"},{word:"DOOR",icon:"🚪",zh:"大門"},{word:"BOOK",icon:"📖",zh:"書本"}
+        ],
+        "數字常識": [
+          {word:"ONE",icon:"1️⃣",zh:"數字1"},{word:"TWO",icon:"2️⃣",zh:"數字2"},{word:"THREE",icon:"3️⃣",zh:"數字3"},
+          {word:"FOUR",icon:"4️⃣",zh:"數字4"},{word:"FIVE",icon:"5️⃣",zh:"數字5"},{word:"SIX",icon:"6️⃣",zh:"數字6"},
+          {word:"SEVEN",icon:"7️⃣",zh:"數字7"},{word:"EIGHT",icon:"8️⃣",zh:"數字8"},{word:"NINE",icon:"9️⃣",zh:"數字9"},
+          {word:"TEN",icon:"🔟",zh:"數字10"}
+        ]
+      },
 
-      // Level 3: 4-5歲 (Reception / K3 - 學校生活、社區職業、交通工具、常見大自然)
-      3: [
-        {word:"SCHOOL",icon:"🏫",zh:"學校"},{word:"TEACHER",icon:"🧑‍🏫",zh:"老師"},{word:"PENCIL",icon:"✏️",zh:"鉛筆"},{word:"PAPER",icon:"📄",zh:"紙張"},
-        {word:"RULER",icon:"📏",zh:"直尺"},{word:"FRIEND",icon:"🧑‍🤝‍🧑",zh:"朋友"},{word:"DOCTOR",icon:"🧑‍⚕️",zh:"醫生"},{word:"NURSE",icon:"🧑‍⚕️",zh:"護士"},
-        {word:"POLICE",icon:"👮",zh:"警察"},{word:"LORRY",icon:"🚛",zh:"貨車"},{word:"TRAIN",icon:"🚆",zh:"火車"},{word:"PLANE",icon:"✈️",zh:"飛機"},
-        {word:"TRAM",icon:"🚊",zh:"電車"},{word:"SHOP",icon:"🏪",zh:"商店"},{word:"MARKET",icon:"🛒",zh:"街市"},{word:"GARDEN",icon:"🏡",zh:"花園"},
-        {word:"RIVER",icon:"🏞️",zh:"河流"},{word:"BEACH",icon:"🏖️",zh:"沙灘"},{word:"CLOUD",icon:"☁️",zh:"白雲"},{word:"WIND",icon:"🌬️",zh:"大風"},
-        {word:"SNOW",icon:"❄️",zh:"下雪"},{word:"RABBIT",icon:"🐰",zh:"兔子"},{word:"MONKEY",icon:"🐒",zh:"猴子"},{word:"TIGER",icon:"🐯",zh:"老虎"},
-        {word:"LION",icon:"🦁",zh:"獅子"}
-      ],
+      // Level 2: 3-4歲 幼兒日常生活
+      2: {
+        "美味水果": [
+          {word:"APPLE",icon:"🍎",zh:"蘋果"},{word:"BANANA",icon:"🍌",zh:"香蕉"},{word:"LEMON",icon:"🍋",zh:"檸檬"},
+          {word:"PEACH",icon:"🍑",zh:"蜜桃"},{word:"MELON",icon:"🍈",zh:"蜜瓜"},{word:"MANGO",icon:"🥭",zh:"芒果"},
+          {word:"GRAPE",icon:"🍇",zh:"提子"},{word:"PEAR",icon:"🍐",zh:"香梨"},{word:"KIWI",icon:"🥝",zh:"奇異果"}
+        ],
+        "英式食物點心": [
+          {word:"BISCUIT",icon:"🍪",zh:"餅乾"},{word:"SWEETS",icon:"🍬",zh:"糖果"},{word:"BREAD",icon:"🍞",zh:"麵包"},
+          {word:"CHEESE",icon:"🧀",zh:"芝士"},{word:"PIZZA",icon:"🍕",zh:"薄餅"},{word:"BURGER",icon:"🍔",zh:"漢堡"},
+          {word:"BUTTER",icon:"🧈",zh:"牛油"},{word:"DONUT",icon:"🍩",zh:"冬圈"},{word:"CAKE",icon:"🎂",zh:"蛋糕"},
+          {word:"SOUP",icon:"🍲",zh:"熱湯"},{word:"RICE",icon:"🍚",zh:"白飯"},{word:"CORN",icon:"🌽",zh:"粟米"}
+        ],
+        "衣物穿搭": [
+          {word:"JUMPER",icon:"🧥",zh:"毛衣外套"},{word:"SHOES",icon:"👞",zh:"鞋子"},{word:"SOCKS",icon:"🧦",zh:"襪子"},
+          {word:"HAT",icon:"🧢",zh:"帽子"},{word:"SKIRT",icon:"👗",zh:"短裙"},{word:"DRESS",icon:"👗",zh:"連身裙"},
+          {word:"BOOTS",icon:"👢",zh:"長靴"},{word:"SHORTS",icon:"🩳",zh:"短褲"}
+        ],
+        "家居家具": [
+          {word:"CHAIR",icon:"🪑",zh:"椅子"},{word:"TABLE",icon:"🪵",zh:"桌子"},{word:"CLOCK",icon:"⏰",zh:"時鐘"},
+          {word:"PHONE",icon:"📱",zh:"電話"},{word:"SPOON",icon:"🥄",zh:"湯匙"},{word:"KNIFE",icon:"🔪",zh:"餐刀"},
+          {word:"LAMP",icon:"💡",zh:"燈泡"},{word:"WINDOW",icon:"🪟",zh:"窗戶"}
+        ],
+        "自然公園": [
+          {word:"TREE",icon:"🌳",zh:"大樹"},{word:"FLOWER",icon:"🌸",zh:"鮮花"},{word:"HOUSE",icon:"🏠",zh:"房屋"},
+          {word:"PARK",icon:"🏞️",zh:"公園"},{word:"PLANT",icon:"🪴",zh:"植物"},{word:"GRASS",icon:"🌱",zh:"小草"},
+          {word:"CLOUD",icon:"☁️",zh:"白雲"},{word:"LEAF",icon:"🍃",zh:"樹葉"}
+        ]
+      },
 
-      // Level 4: 5-6歲 (Year 1 - 動作習慣、情感表達、動物世界與自然氣候)
-      4: [
-        {word:"HAPPY",icon:"😊",zh:"快樂"},{word:"SMILE",icon:"😄",zh:"微笑"},{word:"WALK",icon:"🚶",zh:"步行"},{word:"RUNNING",icon:"🏃",zh:"跑步"},
-        {word:"JUMPING",icon:"🤸",zh:"跳躍"},{word:"SINGING",icon:"🎤",zh:"唱歌"},{word:"DANCING",icon:"💃",zh:"跳舞"},{word:"SLEEP",icon:"😴",zh:"睡覺"},
-        {word:"CLEAN",icon:"🧹",zh:"清潔"},{word:"WASH",icon:"🧼",zh:"洗手"},{word:"ELEPHANT",icon:"🐘",zh:"大象"},{word:"GIRAFFE",icon:"🦒",zh:"長頸鹿"},
-        {word:"PANDA",icon:"🐼",zh:"熊貓"},{word:"PENGUIN",icon:"🐧",zh:"企鵝"},{word:"DOLPHIN",icon:"🐬",zh:"海豚"},{word:"RAINBOW",icon:"🌈",zh:"彩虹"},{word:"FOREST",icon:"🌲",zh:"森林"},{word:"MOUNTAIN",icon:"⛰️",zh:"高山"},{word:"ISLAND",icon:"🏝️",zh:"海島"},{word:"WEATHER",icon:"🌤️",zh:"天氣"},{word:"SPRING",icon:"🌸",zh:"春天"},{word:"SUMMER",icon:"🏖️",zh:"夏天"},{word:"AUTUMN",icon:"🍂",zh:"秋天"},{word:"WINTER",icon:"❄️",zh:"冬天"},{word:"HOLIDAY",icon:"🧳",zh:"假期"}
-      ],
+      // Level 3: 4-5歲 學校與社區
+      3: {
+        "校園學習": [
+          {word:"SCHOOL",icon:"🏫",zh:"學校"},{word:"TEACHER",icon:"🧑‍🏫",zh:"老師"},{word:"PENCIL",icon:"✏️",zh:"鉛筆"},
+          {word:"PAPER",icon:"📄",zh:"紙張"},{word:"RULER",icon:"📏",zh:"直尺"},{word:"FRIEND",icon:"🧑‍🤝‍🧑",zh:"朋友"},
+          {word:"NOTEBOOK",icon:"📓",zh:"筆記本"},{word:"BACKPACK",icon:"🎒",zh:"背包"},{word:"SCISSORS",icon:"✂️",zh:"剪刀"}
+        ],
+        "社區職業": [
+          {word:"DOCTOR",icon:"🧑‍⚕️",zh:"醫生"},{word:"NURSE",icon:"🧑‍⚕️",zh:"護士"},{word:"POLICE",icon:"👮",zh:"警察"},
+          {word:"POSTMAN",icon:"📮",zh:"郵差"},{word:"FIREMAN",icon:"👨‍🚒",zh:"消防員"},{word:"CHEF",icon:"🧑‍🍳",zh:"大廚"},
+          {word:"PILOT",icon:"🧑‍✈️",zh:"機師"},{word:"BUILDER",icon:"👷",zh:"建築工"},{word:"VET",icon:"🧑‍⚕️",zh:"獸醫"}
+        ],
+        "交通工具": [
+          {word:"LORRY",icon:"🚛",zh:"貨車"},{word:"TRAIN",icon:"🚆",zh:"火車"},{word:"PLANE",icon:"✈️",zh:"飛機"},
+          {word:"TRAM",icon:"🚊",zh:"電車"},{word:"BICYCLE",icon:"🚲",zh:"腳踏車"},{word:"SCOOTER",icon:"🛴",zh:"滑板車"},
+          {word:"TAXI",icon:"🚕",zh:"的士"},{word:"SHIP",icon:"🚢",zh:"輪船"}
+        ],
+        "海洋與野生動物": [
+          {word:"ELEPHANT",icon:"🐘",zh:"大象"},{word:"GIRAFFE",icon:"🦒",zh:"長頸鹿"},{word:"DOLPHIN",icon:"🐬",zh:"海豚"},
+          {word:"OCTOPUS",icon:"🐙",zh:"八爪魚"},{word:"MONKEY",icon:"🐒",zh:"猴子"},{word:"TIGER",icon:"🐯",zh:"老虎"},
+          {word:"PANDA",icon:"🐼",zh:"熊貓"},{word:"RABBIT",icon:"🐰",zh:"兔子"}
+        ]
+      },
 
-      // Level 5: 6-7歲 (Year 2 - 知識探險：科學、太空、歷史藝術與世界常識)
-      5: [
-        {word:"EARTH",icon:"🌍",zh:"地球"},{word:"PLANET",icon:"🪐",zh:"行星"},{word:"ROCKET",icon:"🚀",zh:"火箭"},{word:"ASTRONAUT",icon:"🧑‍🚀",zh:"宇航員"},
-        {word:"DINOSAUR",icon:"🦖",zh:"恐龍"},{word:"CASTLE",icon:"🏰",zh:"城堡"},{word:"KING",icon:"👑",zh:"國王"},{word:"QUEEN",icon:"👸",zh:"女王"},
-        {word:"MUSEUM",icon:"🏛️",zh:"博物館"},{word:"MUSIC",icon:"🎵",zh:"音樂"},{word:"GUITAR",icon:"🎸",zh:"吉他"},{word:"PAINTING",icon:"🎨",zh:"繪畫"},
-        {word:"CAMERA",icon:"📷",zh:"相機"},{word:"COMPUTER",icon:"💻",zh:"電腦"},{word:"TELESCOPE",icon:"🔭",zh:"望遠鏡"},{word:"COMPASS",icon:"🧭",zh:"指南針"},
-        {word:"VOLCANO",icon:"🌋",zh:"火山"},{word:"OCEAN",icon:"🌊",zh:"海洋"},{word:"BUTTERFLY",icon:"🦋",zh:"蝴蝶"},{word:"SUNFLOWER",icon:"🌻",zh:"向日葵"},
-        {word:"UMBRELLA",icon:"☂️",zh:"雨傘"},{word:"DRAGON",icon:"🐉",zh:"飛龍"},{word:"UNICORN",icon:"🦄",zh:"獨角獸"},{word:"TREASURE",icon:"💎",zh:"寶藏"},
-        {word:"SCIENCE",icon:"🔬",zh:"科學"}
-      ]
+      // Level 4: 5-6歲 探索與自然
+      4: {
+        "情緒與動作": [
+          {word:"HAPPY",icon:"😊",zh:"快樂"},{word:"SMILE",icon:"😄",zh:"微笑"},{word:"WALK",icon:"🚶",zh:"步行"},
+          {word:"RUNNING",icon:"🏃",zh:"跑步"},{word:"JUMPING",icon:"🤸",zh:"跳躍"},{word:"SINGING",icon:"🎤",zh:"唱歌"},
+          {word:"DANCING",icon:"💃",zh:"跳舞"},{word:"SLEEP",icon:"😴",zh:"睡覺"}
+        ],
+        "形容詞對比": [
+          {word:"BIG",icon:"🐘",zh:"大的"},{word:"SMALL",icon:"🐭",zh:"小的"},{word:"FAST",icon:"🏎️",zh:"快的"},
+          {word:"SLOW",icon:"🐢",zh:"慢的"},{word:"CLEAN",icon:"✨",zh:"整潔"},{word:"DIRTY",icon:"💩",zh:"骯髒"},
+          {word:"TALL",icon:"🦒",zh:"高大"},{word:"SHORT",icon:"📐",zh:"矮小"}
+        ],
+        "氣候與自然界": [
+          {word:"FOREST",icon:"🌲",zh:"森林"},{word:"ISLAND",icon:"🏝️",zh:"海島"},{word:"WEATHER",icon:"🌤️",zh:"天氣"},
+          {word:"AUTUMN",icon:"🍂",zh:"秋天"},{word:"WINTER",icon:"❄️",zh:"冬天"},{word:"SUMMER",icon:"🏖️",zh:"夏天"},
+          {word:"SPRING",icon:"🌸",zh:"春天"},{word:"RAINBOW",icon:"🌈",zh:"彩虹"}
+        ]
+      },
+
+      // Level 5: 6-7歲 知識達人
+      5: {
+        "太空宇宙": [
+          {word:"EARTH",icon:"🌍",zh:"地球"},{word:"PLANET",icon:"🪐",zh:"行星"},{word:"ROCKET",icon:"🚀",zh:"火箭"},
+          {word:"ASTRONAUT",icon:"🧑‍🚀",zh:"宇航員"},{word:"GALAXY",icon:"🌌",zh:"銀河系"},{word:"METEOR",icon:"☄️",zh:"流星"}
+        ],
+        "科學探索": [
+          {word:"SCIENCE",icon:"🔬",zh:"科學"},{word:"TELESCOPE",icon:"🔭",zh:"望遠鏡"},{word:"MICROSCOPE",icon:"🔬",zh:"顯微鏡"},
+          {word:"COMPASS",icon:"🧭",zh:"指南針"},{word:"VOLCANO",icon:"🌋",zh:"火山"},{word:"OCEAN",icon:"🌊",zh:"海洋"}
+        ],
+        "歷史城堡與藝術": [
+          {word:"DINOSAUR",icon:"🦖",zh:"恐龍"},{word:"CASTLE",icon:"🏰",zh:"城堡"},{word:"KING",icon:"👑",zh:"國王"},
+          {word:"QUEEN",icon:"👸",zh:"女王"},{word:"MUSEUM",icon:"🏛️",zh:"博物館"},{word:"MUSIC",icon:"🎵",zh:"音樂"},
+          {word:"GUITAR",icon:"🎸",zh:"吉他"},{word:"PAINTING",icon:"🎨",zh:"繪畫"}
+        ]
+      }
     };
 
     var currentMode = 'spelling';
-    var currentLevel = 1;
+    var selectedLevel = 1;
     var questions = [];
     var currentIndex = 0;
     var currentAnswer = [];
@@ -564,18 +746,39 @@
         });
       });
 
+      // 點擊關卡按鈕進入「主題選擇選單」
       var levelBtns = document.querySelectorAll('.level-btn');
       levelBtns.forEach(function(btn) {
         btn.addEventListener('click', function() {
           forceUnlockAudio();
-          var lvl = parseInt(btn.getAttribute('data-lvl'));
-          startLevel(lvl);
+          selectedLevel = parseInt(btn.getAttribute('data-lvl'));
+          openTopicMenu(selectedLevel);
         });
+      });
+
+      document.getElementById('cancelLevelBtn').addEventListener('click', function() {
+        forceUnlockAudio();
+        showMenu();
+      });
+
+      document.getElementById('startGameBtn').addEventListener('click', function() {
+        forceUnlockAudio();
+        startGameWithTopics();
+      });
+
+      document.getElementById('selectAllTopicsBtn').addEventListener('click', function() {
+        var checkboxes = document.querySelectorAll('#topicsContainer input[type="checkbox"]');
+        checkboxes.forEach(function(cb) { cb.checked = true; });
+      });
+
+      document.getElementById('deselectAllTopicsBtn').addEventListener('click', function() {
+        var checkboxes = document.querySelectorAll('#topicsContainer input[type="checkbox"]');
+        checkboxes.forEach(function(cb) { cb.checked = false; });
       });
 
       document.getElementById('backBtn').addEventListener('click', function() {
         forceUnlockAudio();
-        showMenu();
+        openTopicMenu(selectedLevel);
       });
 
       document.getElementById('speedToggleBtn').addEventListener('click', function() {
@@ -618,17 +821,69 @@
       });
     });
 
-    function startLevel(lvl) {
-      currentLevel = lvl;
-      document.body.className = 'bg-lvl-' + lvl;
-
-      var raw = levelData[lvl] || levelData[1];
-      questions = raw.slice().sort(function() { return Math.random() - 0.5; });
-      currentIndex = 0;
-      
+    // 打開主題選單並渲染分類
+    function openTopicMenu(lvl) {
       document.getElementById('menuScreen').style.display = 'none';
+      document.getElementById('topicScreen').style.display = 'block';
+      document.getElementById('gameScreen').style.display = 'none';
+
+      document.getElementById('selectedLevelTitle').textContent = "Level " + lvl + " 練習設定";
+
+      var topicsObj = levelCategorizedData[lvl] || levelCategorizedData[1];
+      var container = document.getElementById('topicsContainer');
+      container.innerHTML = '';
+
+      for (var topicName in topicsObj) {
+        if (topicsObj.hasOwnProperty(topicName)) {
+          var label = document.createElement('label');
+          label.className = 'topic-item';
+          
+          var checkbox = document.createElement('input');
+          checkbox.type = 'checkbox';
+          checkbox.value = topicName;
+          checkbox.checked = true; // 預設全選
+
+          label.appendChild(checkbox);
+          label.appendChild(document.createTextNode(topicName + " (" + topicsObj[topicName].length + "題)"));
+          container.appendChild(label);
+        }
+      }
+    }
+
+    // 根據選擇的主題組合題目池並開始遊戲
+    function startGameWithTopics() {
+      var checkboxes = document.querySelectorAll('#topicsContainer input[type="checkbox"]:checked');
+      if (checkboxes.length === 0) {
+        alert("請至少勾選一個練習主題喔！");
+        return;
+      }
+
+      var topicsObj = levelCategorizedData[selectedLevel] || levelCategorizedData[1];
+      var combinedPool = [];
+
+      checkboxes.forEach(function(cb) {
+        var topicName = cb.value;
+        if (topicsObj[topicName]) {
+          combinedPool = combinedPool.concat(topicsObj[topicName]);
+        }
+      });
+
+      // 設定抽題數量
+      var selectVal = document.getElementById('customCountSelect').value;
+      var targetCount = defaultLevelCounts[selectedLevel] || 10;
+      if (selectVal !== 'default') {
+        targetCount = parseInt(selectVal);
+      }
+
+      // 洗牌並抽出題目
+      var shuffled = combinedPool.slice().sort(function() { return Math.random() - 0.5; });
+      questions = shuffled.slice(0, Math.min(targetCount, shuffled.length));
+      currentIndex = 0;
+
+      document.body.className = 'bg-lvl-' + selectedLevel;
+      document.getElementById('topicScreen').style.display = 'none';
       document.getElementById('gameScreen').style.display = 'block';
-      
+
       setTimeout(function() {
         initQuestion();
       }, 150);
@@ -637,6 +892,7 @@
     function showMenu() {
       document.body.className = '';
       document.getElementById('gameScreen').style.display = 'none';
+      document.getElementById('topicScreen').style.display = 'none';
       document.getElementById('menuScreen').style.display = 'block';
       updateMascot("🐻", "加油喔！");
     }
@@ -708,7 +964,7 @@
         }
 
         var letters = q.word.split('');
-        var extraCount = currentLevel >= 3 ? 3 : 2;
+        var extraCount = selectedLevel >= 3 ? 3 : 2;
         for (var j = 0; j < extraCount; j++) {
           letters.push(String.fromCharCode(65 + Math.floor(Math.random() * 26)));
         }
@@ -733,7 +989,7 @@
         spellingArea.style.display = 'none';
         choiceArea.style.display = 'block';
         
-        if (currentLevel === 1 || currentLevel === 2) {
+        if (selectedLevel === 1 || selectedLevel === 2) {
           document.getElementById('instructionText').textContent = "點擊 🔊 聽英式單字發音，選出正確答案！";
         } else {
           document.getElementById('instructionText').textContent = "點擊圖片聽英式發音，選出正確答案！";
@@ -741,7 +997,7 @@
         
         updateMascot("🐻", "選出正確的單字！");
 
-        var currentList = levelData[currentLevel] || levelData[1];
+        var currentList = questions;
         var wrongCandidates = currentList.filter(function(item) {
           return item.word !== q.word;
         });
@@ -771,7 +1027,7 @@
 
             row.appendChild(btn);
 
-            if (currentLevel === 1 || currentLevel === 2) {
+            if (selectedLevel === 1 || selectedLevel === 2) {
               var audioBtn = document.createElement('button');
               audioBtn.className = 'audio-btn';
               audioBtn.textContent = '🔊';
@@ -943,7 +1199,6 @@
       } catch (e) {}
     }
 
-    // 發音切換為英式英語 (en-GB / British Accent)
     function speakText(text) {
       try {
         if ('speechSynthesis' in window) {
@@ -954,7 +1209,7 @@
           
           var lower = text.toLowerCase();
           var utterance = new SpeechSynthesisUtterance(lower);
-          utterance.lang = 'en-GB'; // 設定為英式英語
+          utterance.lang = 'en-GB';
           utterance.rate = speechRate;
           
           var voices = window.speechSynthesis.getVoices();
