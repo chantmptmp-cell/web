@@ -40,10 +40,17 @@
       box-shadow: 0 12px 30px rgba(0,0,0,0.15);
       text-align: center;
       width: 100%;
-      max-width: 520px;
+      max-width: 600px;
       position: relative;
       overflow: hidden;
       border: 4px solid #fff;
+    }
+
+    /* 全螢幕狀態下的卡片調整 */
+    :fullscreen .game-card, :-webkit-full-screen .game-card {
+      max-width: 700px;
+      border-radius: 32px;
+      padding: 24px;
     }
 
     .mute-notice {
@@ -201,17 +208,25 @@
       touch-action: manipulation;
     }
 
-    /* 語速切換按鈕 */
-    .speed-btn {
+    /* 頂部工具按鈕通用樣式 */
+    .tool-btn {
       padding: 6px 12px;
       font-size: 13px;
       font-weight: bold;
-      background-color: #fff3bf;
-      color: #d9480f;
-      border: 2px solid #ffd43b;
       border-radius: 12px;
       cursor: pointer;
       touch-action: manipulation;
+      border: 2px solid;
+    }
+    .speed-btn {
+      background-color: #fff3bf;
+      color: #d9480f;
+      border-color: #ffd43b;
+    }
+    .fullscreen-btn {
+      background-color: #e7f5ff;
+      color: #1c7ed6;
+      border-color: #74c0fc;
     }
 
     .progress-text {
@@ -406,6 +421,7 @@
     <div class="header-bar">
       <div class="mascot" id="mascotBtn">🐻</div>
       <div id="mascotBubble" style="font-size: 14px; font-weight: bold; color: #495057;">點擊開啟聲音！</div>
+      <button class="tool-btn fullscreen-btn" id="fullScreenBtn">🖥️ 全螢幕</button>
       <div class="score-board">⭐ <span id="starScore">0</span></div>
     </div>
 
@@ -434,7 +450,7 @@
     <div id="gameScreen" style="display: none;">
       <div class="top-bar">
         <button class="back-btn" id="backBtn">➔ 返回選單</button>
-        <button class="speed-btn" id="speedToggleBtn">語速: 🐇 正常</button>
+        <button class="tool-btn speed-btn" id="speedToggleBtn">語速: 🐇 正常</button>
         <span class="progress-text" id="progressText">第 1 / 50 題</span>
       </div>
 
@@ -541,7 +557,7 @@
     var currentAnswer = [];
     var starsCount = 0;
     var isAnswered = false;
-    var speechRate = 0.8; // 預設正常語速
+    var speechRate = 0.8;
 
     function forceUnlockAudio() {
       try {
@@ -554,6 +570,26 @@
         }
         playTone(440, 0.01);
       } catch (e) {}
+    }
+
+    /* 全螢幕功能邏輯 */
+    function toggleFullScreen() {
+      if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+        var docEl = document.documentElement;
+        if (docEl.requestFullscreen) {
+          docEl.requestFullscreen();
+        } else if (docEl.webkitRequestFullscreen) {
+          docEl.webkitRequestFullscreen();
+        }
+        document.getElementById('fullScreenBtn').textContent = '📺 視窗';
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        }
+        document.getElementById('fullScreenBtn').textContent = '🖥️ 全螢幕';
+      }
     }
 
     document.addEventListener("DOMContentLoaded", function() {
@@ -587,7 +623,13 @@
         showMenu();
       });
 
-      // 語速切換按鈕
+      // 全螢幕切換
+      document.getElementById('fullScreenBtn').addEventListener('click', function() {
+        forceUnlockAudio();
+        toggleFullScreen();
+      });
+
+      // 語速切換
       document.getElementById('speedToggleBtn').addEventListener('click', function() {
         forceUnlockAudio();
         if (speechRate === 0.8) {
@@ -630,8 +672,6 @@
 
     function startLevel(lvl) {
       currentLevel = lvl;
-      
-      // 切換背景主題色
       document.body.className = 'bg-lvl-' + lvl;
 
       var raw = levelData[lvl] || levelData[1];
@@ -661,7 +701,7 @@
     function triggerMascotBounce() {
       var mascot = document.getElementById('mascotBtn');
       mascot.classList.remove('bounce');
-      void mascot.offsetWidth; // 觸發重繪
+      void mascot.offsetWidth;
       mascot.classList.add('bounce');
     }
 
@@ -912,7 +952,7 @@
       
       updateMascot("🥳", "超級厲害！");
       triggerMascotBounce();
-      triggerConfetti(); // 觸發彩帶特效
+      triggerConfetti();
 
       playTone(523.25, 0.15);
       setTimeout(function() { playTone(659.25, 0.25); }, 150);
@@ -966,7 +1006,7 @@
           var lower = text.toLowerCase();
           var utterance = new SpeechSynthesisUtterance(lower);
           utterance.lang = 'en-US';
-          utterance.rate = speechRate; // 使用當前設定語速
+          utterance.rate = speechRate;
           
           var voices = window.speechSynthesis.getVoices();
           for (var i = 0; i < voices.length; i++) {
