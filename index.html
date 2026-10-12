@@ -7,9 +7,9 @@
   <!-- iOS 專用全螢幕無邊框 App 設定 -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="英文單字遊戲">
+  <meta name="apple-mobile-web-app-title" content="英式英文遊戲">
   
-  <title>幼兒英文單字學習遊戲</title>
+  <title>幼兒英式英文單字學習遊戲</title>
   <!-- 引入輕量級 Confetti 彩帶特效庫 -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <style>
@@ -52,7 +52,6 @@
       border: 4px solid #fff;
     }
 
-    /* 全螢幕/獨立App狀態下的卡片調整 */
     @media all and (display-mode: standalone) {
       .game-card {
         max-width: 100%;
@@ -178,7 +177,7 @@
     }
     .level-btn {
       padding: 14px 20px;
-      font-size: 18px;
+      font-size: 17px;
       font-weight: bold;
       color: white;
       border: none;
@@ -265,15 +264,15 @@
     .answer-container {
       display: flex;
       justify-content: center;
-      gap: 8px;
+      gap: 6px;
       flex-wrap: wrap;
       margin: 18px 0;
     }
     .slot {
-      width: 48px;
-      height: 56px;
+      width: 42px;
+      height: 52px;
       border-bottom: 4px solid #4dabf7;
-      font-size: 32px;
+      font-size: 28px;
       font-weight: bold;
       color: rgba(25, 113, 194, 0.25);
       display: flex;
@@ -293,18 +292,18 @@
     .letters-container {
       display: flex;
       justify-content: center;
-      gap: 10px;
+      gap: 8px;
       flex-wrap: wrap;
       margin-bottom: 10px;
     }
     .letter-btn {
-      width: 52px;
-      height: 52px;
+      width: 48px;
+      height: 48px;
       color: white;
-      font-size: 28px;
+      font-size: 24px;
       font-weight: bold;
       border: none;
-      border-radius: 16px;
+      border-radius: 14px;
       cursor: pointer;
       touch-action: manipulation;
       transition: transform 0.1s;
@@ -312,11 +311,11 @@
     .letter-btn:active {
       transform: translateY(3px);
     }
-    .letter-btn:nth-child(5n+1) { background-color: #ff6b6b; box-shadow: 0 5px 0 #c92a2a; }
-    .letter-btn:nth-child(5n+2) { background-color: #4c6ef5; box-shadow: 0 5px 0 #364fc7; }
-    .letter-btn:nth-child(5n+3) { background-color: #51cf66; box-shadow: 0 5px 0 #2b8a3e; }
-    .letter-btn:nth-child(5n+4) { background-color: #fcc419; box-shadow: 0 5px 0 #e67700; color: #333; }
-    .letter-btn:nth-child(5n+5) { background-color: #cc5de8; box-shadow: 0 5px 0 #862e9c; }
+    .letter-btn:nth-child(5n+1) { background-color: #ff6b6b; box-shadow: 0 4px 0 #c92a2a; }
+    .letter-btn:nth-child(5n+2) { background-color: #4c6ef5; box-shadow: 0 4px 0 #364fc7; }
+    .letter-btn:nth-child(5n+3) { background-color: #51cf66; box-shadow: 0 4px 0 #2b8a3e; }
+    .letter-btn:nth-child(5n+4) { background-color: #fcc419; box-shadow: 0 4px 0 #e67700; color: #333; }
+    .letter-btn:nth-child(5n+5) { background-color: #cc5de8; box-shadow: 0 4px 0 #862e9c; }
     .letter-btn.disabled { visibility: hidden; }
 
     .word-options-container {
@@ -407,7 +406,7 @@
 <body>
 
   <div class="game-card">
-    <div class="mute-notice">🔔 若聽不到聲音，請關閉 iPhone 側邊靜音模式並調大音量</div>
+    <div class="mute-notice">🇬🇧 英式發音模式 ｜ 🔔 若無聲請關閉靜音模式</div>
     
     <div id="correctBadge" class="correct-badge">
       Super Star! 🌟
@@ -422,7 +421,7 @@
 
     <!-- 主選單 -->
     <div id="menuScreen">
-      <h2>請選擇學習關卡 🎯</h2>
+      <h2>請選擇學習關卡 🇬🇧🎯</h2>
 
       <div class="mode-selector-box">
         <label>🎮 請選擇遊戲玩法：</label>
@@ -433,11 +432,11 @@
       </div>
 
       <div class="level-menu">
-        <button class="level-btn lvl-1" data-lvl="1">Level 1: 幼兒入門 (3字母) <span>50題</span></button>
-        <button class="level-btn lvl-2" data-lvl="2">Level 2: 基礎進階 (4字母) <span>55題</span></button>
-        <button class="level-btn lvl-3" data-lvl="3">Level 3: 中級探索 (5字母) <span>50題</span></button>
-        <button class="level-btn lvl-4" data-lvl="4">Level 4: 高級挑戰 (6+字母) <span>50題</span></button>
-        <button class="level-btn lvl-5" data-lvl="5">Level 5: 英語小達人 (綜合) <span>50題</span></button>
+        <button class="level-btn lvl-1" data-lvl="1">Level 1: 啟蒙 (2-3歲 核心認知) <span>25題</span></button>
+        <button class="level-btn lvl-2" data-lvl="2">Level 2: 幼兒 (3-4歲 日常生活) <span>25題</span></button>
+        <button class="level-btn lvl-3" data-lvl="3">Level 3: 幼高 (4-5歲 學校與社區) <span>25題</span></button>
+        <button class="level-btn lvl-4" data-lvl="4">Level 4: 小一 (5-6歲 探索與自然) <span>25題</span></button>
+        <button class="level-btn lvl-5" data-lvl="5">Level 5: 小二 (6-7歲 知識達人) <span>25題</span></button>
       </div>
     </div>
 
@@ -446,14 +445,14 @@
       <div class="top-bar">
         <button class="back-btn" id="backBtn">➔ 返回選單</button>
         <button class="tool-btn speed-btn" id="speedToggleBtn">語速: 🐇 正常</button>
-        <span class="progress-text" id="progressText">第 1 / 50 題</span>
+        <span class="progress-text" id="progressText">第 1 / 25 題</span>
       </div>
 
       <div class="image-container" id="imageDisplay">
         <div class="image-icon" id="imageIcon">🐱</div>
         <div class="chinese-hint" id="chineseHint">貓咪</div>
       </div>
-      <div class="hint-text" id="instructionText">點擊圖片聽發音</div>
+      <div class="hint-text" id="instructionText">點擊圖片聽英式發音</div>
 
       <!-- 模式一：拼字區域 -->
       <div id="spellingArea" style="display: none;">
@@ -471,77 +470,58 @@
   </div>
 
   <script>
+    // 依據英式幼兒發展階段 (UK EYFS & Primary National Curriculum) 重新精編單字庫
     var levelData = {
+      // Level 1: 2-3歲 (Early Years Foundation Stage - 核心認知：身體、家庭、色彩、基本動物)
       1: [
-        {word:"CAT",icon:"🐱",zh:"貓咪"},{word:"DOG",icon:"🐶",zh:"小狗"},{word:"PIG",icon:"🐷",zh:"小豬"},{word:"COW",icon:"🐮",zh:"乳牛"},
-        {word:"FOX",icon:"🦊",zh:"狐狸"},{word:"SUN",icon:"☀️",zh:"太陽"},{word:"BUS",icon:"🚌",zh:"巴士"},{word:"BED",icon:"🛏️",zh:"睡床"},
-        {word:"CUP",icon:"🥤",zh:"水杯"},{word:"HAT",icon:"🧢",zh:"帽子"},{word:"EGG",icon:"🥚",zh:"雞蛋"},{word:"ICE",icon:"🧊",zh:"冰塊"},
-        {word:"BOX",icon:"📦",zh:"盒子"},{word:"BAG",icon:"🎒",zh:"書包"},{word:"MAP",icon:"🗺️",zh:"地圖"},{word:"PEN",icon:"🖊️",zh:"原子筆"},
-        {word:"CAR",icon:"🚗",zh:"汽車"},{word:"BOY",icon:"👦",zh:"男孩"},{word:"KEY",icon:"🔑",zh:"鑰匙"},{word:"FAN",icon:"🪭",zh:"風扇"},
-        {word:"ANT",icon:"🐜",zh:"螞蟻"},{word:"BAT",icon:"🦇",zh:"蝙蝠"},{word:"BEE",icon:"🐝",zh:"蜜蜂"},{word:"OWL",icon:"🦉",zh:"貓頭鷹"},
-        {word:"RAT",icon:"🐀",zh:"老鼠"},{word:"JAM",icon:"🥫",zh:"果醬"},{word:"NUT",icon:"🥜",zh:"堅果"},{word:"PIE",icon:"🥧",zh:"餡餅"},
-        {word:"TEA",icon:"🍵",zh:"綠茶"},{word:"CAN",icon:"🥫",zh:"罐頭"},{word:"PIN",icon:"📌",zh:"圖釘"},{word:"NET",icon:"🕸️",zh:"漁網"},
-        {word:"LIP",icon:"👄",zh:"嘴唇"},{word:"LEG",icon:"🦵",zh:"大腿"},{word:"ARM",icon:"🦾",zh:"手臂"},{word:"EYE",icon:"👁️",zh:"眼睛"},
-        {word:"BUG",icon:"🐛",zh:"甲蟲"},{word:"FLY",icon:"🪰",zh:"蒼蠅"},{word:"GEM",icon:"💎",zh:"寶石"},{word:"WEB",icon:"🕸️",zh:"蜘蛛網"},
-        {word:"MOP",icon:"🧹",zh:"拖把"},{word:"TOP",icon:"🪵",zh:"陀螺"},{word:"BOW",icon:"🏹",zh:"弓箭"},{word:"LOG",icon:"🪵",zh:"木頭"},
-        {word:"POT",icon:"🏺",zh:"花盆"},{word:"JUG",icon:"🏺",zh:"水壺"},{word:"TAG",icon:"🏷️",zh:"標籤"},{word:"CAP",icon:"🧢",zh:"鴨舌帽"},
-        {word:"SIT",icon:"🪑",zh:"坐下"},{word:"RUN",icon:"🏃",zh:"跑步"}
+        {word:"CAT",icon:"🐱",zh:"貓咪"},{word:"DOG",icon:"🐶",zh:"小狗"},{word:"MUM",icon:"👩",zh:"媽媽"},{word:"DAD",icon:"👨",zh:"爸爸"},
+        {word:"BABY",icon:"👶",zh:"BB"},{word:"EYE",icon:"👁️",zh:"眼睛"},{word:"EAR",icon:"👂",zh:"耳朵"},{word:"NOSE",icon:"👃",zh:"鼻子"},
+        {word:"HAND",icon:"✋",zh:"手掌"},{word:"FOOT",icon:"🦶",zh:"腳掌"},{word:"RED",icon:"🔴",zh:"紅色"},{word:"BLUE",icon:"🔵",zh:"藍色"},
+        {word:"SUN",icon:"☀️",zh:"太陽"},{word:"MOON",icon:"🌙",zh:"月亮"},{word:"STAR",icon:"⭐",zh:"星星"},{word:"MILK",icon:"🥛",zh:"牛奶"},
+        {word:"WATER",icon:"💧",zh:"清水"},{word:"DUCK",icon:"🦆",zh:"鴨子"},{word:"BIRD",icon:"🐦",zh:"小鳥"},{word:"FISH",icon:"🐟",zh:"小魚"},
+        {word:"PIG",icon:"🐷",zh:"小豬"},{word:"COW",icon:"🐮",zh:"乳牛"},{word:"BOY",icon:"👦",zh:"男孩"},{word:"GIRL",icon:"👧",zh:"女孩"},
+        {word:"BALL",icon:"⚽",zh:"皮球"}
       ],
+
+      // Level 2: 3-4歲 (Nursery / K1-K2 - 日常食物、衣物、玩具、家居用品)
       2: [
-        {word:"DUCK",icon:"🦆",zh:"鴨子"},{word:"BIRD",icon:"🐦",zh:"小鳥"},{word:"FISH",icon:"🐟",zh:"小魚"},{word:"FROG",icon:"🐸",zh:"青蛙"},
-        {word:"BEAR",icon:"🐻",zh:"大熊"},{word:"MILK",icon:"🥛",zh:"牛奶"},{word:"CAKE",icon:"🎂",zh:"蛋糕"},{word:"CORN",icon:"🌽",zh:"粟米"},
-        {word:"RICE",icon:"🍚",zh:"白飯"},{word:"MOON",icon:"🌙",zh:"月亮"},{word:"STAR",icon:"⭐",zh:"星星"},{word:"TREE",icon:"🌳",zh:"大樹"},
-        {word:"SHIP",icon:"🚢",zh:"輪船"},{word:"BOOK",icon:"📖",zh:"書本"},{word:"BALL",icon:"⚽",zh:"皮球"},{word:"LION",icon:"🦁",zh:"獅子"},
-        {word:"DEER",icon:"🦌",zh:"小鹿"},{word:"GOAT",icon:"🐐",zh:"山羊"},{word:"WOLF",icon:"🐺",zh:"野狼"},{word:"SEAL",icon:"🦭",zh:"海豹"},
-        {word:"SOUP",icon:"🍲",zh:"熱湯"},{word:"MEAT",icon:"🥩",zh:"肉類"},{word:"PEAR",icon:"🍐",zh:"香梨"},{word:"KIWI",icon:"🥝",zh:"奇異果"},
-        {word:"LEAF",icon:"🍃",zh:"樹葉"},{word:"ROSE",icon:"🌹",zh:"玫瑰"},{word:"WIND",icon:"🌬️",zh:"大風"},{word:"SNOW",icon:"❄️",zh:"下雪"},
-        {word:"RAIN",icon:"🌧️",zh:"下雨"},{word:"FIRE",icon:"🔥",zh:"火苗"},{word:"BOAT",icon:"⛵",zh:"小船"},{word:"BIKE",icon:"🚲",zh:"單車"},
-        {word:"TAXI",icon:"🚕",zh:"的士"},{word:"RING",icon:"💍",zh:"戒指"},{word:"DOLL",icon:"🧸",zh:"公仔"},{word:"KITE",icon:"🪁",zh:"風箏"},
-        {word:"DRUM",icon:"🥁",zh:"小鼓"},{word:"LAMP",icon:"💡",zh:"燈泡"},{word:"DOOR",icon:"🚪",zh:"大門"},{word:"SHIRT",icon:"👕",zh:"襯衫"},
-        {word:"SOCK",icon:"🧦",zh:"襪子"},{word:"SHOE",icon:"👞",zh:"皮鞋"},{word:"HAND",icon:"✋",zh:"手掌"},{word:"FOOT",icon:"🦶",zh:"腳掌"},
-        {word:"FACE",icon:"😀",zh:"臉龐"},{word:"NOSE",icon:"👃",zh:"鼻子"},{word:"HAIR",icon:"💇",zh:"頭髮"},{word:"BABY",icon:"👶",zh:"BB"},
-        {word:"KING",icon:"👑",zh:"國王"},{word:"GIFT",icon:"🎁",zh:"禮物"},{word:"COIN",icon:"🪙",zh:"金幣"},{word:"PARK",icon:"🏞️",zh:"公園"},
-        {word:"HOME",icon:"🏠",zh:"家園"},{word:"FARM",icon:"🚜",zh:"農場"},{word:"BELL",icon:"🔔",zh:"鎖匙"}
+        {word:"APPLE",icon:"🍎",zh:"蘋果"},{word:"BANANA",icon:"🍌",zh:"香蕉"},{word:"BISCUIT",icon:"🍪",zh:"餅乾"},{word:"SWEETS",icon:"🍬",zh:"糖果"},
+        {word:"BREAD",icon:"🍞",zh:"麵包"},{word:"CHEESE",icon:"🧀",zh:"芝士"},{word:"WATER",icon:"💧",zh:"飲用水"},{word:"JUMPER",icon:"🧥",zh:"毛衣外套"},
+        {word:"SHOES",icon:"👞",zh:"鞋子"},{word:"SOCKS",icon:"🧦",zh:"襪子"},{word:"HAT",icon:"🧢",zh:"帽子"},{word:"BED",icon:"🛏️",zh:"睡床"},
+        {word:"CHAIR",icon:"🪑",zh:"椅子"},{word:"TABLE",icon:"🪵",zh:"桌子"},{word:"DOOR",icon:"🚪",zh:"大門"},{word:"BOOK",icon:"📖",zh:"書本"},
+        {word:"TOY",icon:"🧸",zh:"玩具"},{word:"DOLL",icon:"🧸",zh:"公仔"},{word:"CAR",icon:"🚗",zh:"汽車"},{word:"BUS",icon:"🚌",zh:"巴士"},
+        {word:"TREE",icon:"🌳",zh:"大樹"},{word:"FLOWER",icon:"🌸",zh:"鮮花"},{word:"RAIN",icon:"🌧️",zh:"下雨"},{word:"HOUSE",icon:"🏠",zh:"房屋"},
+        {word:"PARK",icon:"🏞️",zh:"公園"}
       ],
+
+      // Level 3: 4-5歲 (Reception / K3 - 學校生活、社區職業、交通工具、常見大自然)
       3: [
-        {word:"APPLE",icon:"🍎",zh:"蘋果"},{word:"PIZZA",icon:"🍕",zh:"薄餅"},{word:"TIGER",icon:"🐯",zh:"老虎"},{word:"ZEBRA",icon:"🦓",zh:"斑馬"},
-        {word:"PANDA",icon:"🐼",zh:"熊貓"},{word:"CAMEL",icon:"🐫",zh:"駱駝"},{word:"KOALA",icon:"🐨",zh:"樹熊"},{word:"SNAKE",icon:"🐍",zh:"長蛇"},
-        {word:"WHALE",icon:"🐳",zh:"鯨魚"},{word:"SHARK",icon:"🦈",zh:"鯊魚"},{word:"HOUSE",icon:"🏠",zh:"房屋"},{word:"TRAIN",icon:"🚆",zh:"火車"},
-        {word:"PLANE",icon:"✈️",zh:"飛機"},{word:"CLOCK",icon:"⏰",zh:"時鐘"},{word:"CHAIR",icon:"🪑",zh:"椅子"},{word:"TABLE",icon:"🪵",zh:"餐桌"},
-        {word:"PHONE",icon:"📱",zh:"電話"},{word:"BREAD",icon:"🍞",zh:"麵包"},{word:"CANDY",icon:"🍬",zh:"糖果"},{word:"DONUT",icon:"🍩",zh:"冬圈"},{word:"LEMON",icon:"🍋",zh:"檸檬"},
-        {word:"PEACH",icon:"🍑",zh:"蜜桃"},{word:"MELON",icon:"🍈",zh:"蜜瓜"},{word:"MANGO",icon:"🥭",zh:"芒果"},{word:"GRAPE",icon:"🍇",zh:"提子"},
-        {word:"PLANT",icon:"🪴",zh:"植物"},{word:"GRASS",icon:"🌱",zh:"小草"},{word:"WATER",icon:"💧",zh:"清水"},{word:"EARTH",icon:"🌍",zh:"地球"},
-        {word:"BEACH",icon:"🏖️",zh:"沙灘"},{word:"CLOUD",icon:"☁️",zh:"白雲"},{word:"STORM",icon:"🌩️",zh:"暴風"},{word:"SKIRT",icon:"👗",zh:"短裙"},
-        {word:"DRESS",icon:"👗",zh:"連身裙"},{word:"JEANS",icon:"👖",zh:"牛仔褲"},{word:"BOOTS",icon:"👢",zh:"長靴"},{word:"CROWN",icon:"👑",zh:"皇冠"},
-        {word:"ROBOT",icon:"🤖",zh:"機器人"},{word:"MUSIC",icon:"🎵",zh:"音樂"},{word:"RADIO",icon:"📻",zh:"收音機"},{word:"PAPER",icon:"📄",zh:"紙張"},
-        {word:"SPOON",icon:"🥄",zh:"湯匙"},{word:"KNIFE",icon:"🔪",zh:"餐刀"},{word:"RULER",icon:"📏",zh:"直尺"},{word:"HEART",icon:"❤️",zh:"愛心"},
-        {word:"SMILE",icon:"😊",zh:"笑臉"},{word:"GIRL",icon:"👧",zh:"女孩"},{word:"ANGEL",icon:"👼",zh:"天使"}
+        {word:"SCHOOL",icon:"🏫",zh:"學校"},{word:"TEACHER",icon:"🧑‍🏫",zh:"老師"},{word:"PENCIL",icon:"✏️",zh:"鉛筆"},{word:"PAPER",icon:"📄",zh:"紙張"},
+        {word:"RULER",icon:"📏",zh:"直尺"},{word:"FRIEND",icon:"🧑‍🤝‍🧑",zh:"朋友"},{word:"DOCTOR",icon:"🧑‍⚕️",zh:"醫生"},{word:"NURSE",icon:"🧑‍⚕️",zh:"護士"},
+        {word:"POLICE",icon:"👮",zh:"警察"},{word:"LORRY",icon:"🚛",zh:"貨車"},{word:"TRAIN",icon:"🚆",zh:"火車"},{word:"PLANE",icon:"✈️",zh:"飛機"},
+        {word:"TRAM",icon:"🚊",zh:"電車"},{word:"SHOP",icon:"🏪",zh:"商店"},{word:"MARKET",icon:"🛒",zh:"街市"},{word:"GARDEN",icon:"🏡",zh:"花園"},
+        {word:"RIVER",icon:"🏞️",zh:"河流"},{word:"BEACH",icon:"🏖️",zh:"沙灘"},{word:"CLOUD",icon:"☁️",zh:"白雲"},{word:"WIND",icon:"🌬️",zh:"大風"},
+        {word:"SNOW",icon:"❄️",zh:"下雪"},{word:"RABBIT",icon:"🐰",zh:"兔子"},{word:"MONKEY",icon:"🐒",zh:"猴子"},{word:"TIGER",icon:"🐯",zh:"老虎"},
+        {word:"LION",icon:"🦁",zh:"獅子"}
       ],
+
+      // Level 4: 5-6歲 (Year 1 - 動作習慣、情感表達、動物世界與自然氣候)
       4: [
-        {word:"BANANA",icon:"🍌",zh:"香蕉"},{word:"MONKEY",icon:"🐒",zh:"猴子"},{word:"RABBIT",icon:"🐰",zh:"兔子"},{word:"TURTLE",icon:"🐢",zh:"烏龜"},
-        {word:"SPIDER",icon:"🕷️",zh:"蜘蛛"},{word:"DONKEY",icon:"🫏",zh:"驢子"},{word:"PARROT",icon:"🦜",zh:"鸚鵡"},{word:"TOMATO",icon:"🍅",zh:"番茄"},
-        {word:"POTATO",icon:"🥔",zh:"薯仔"},{word:"CARROT",icon:"🥕",zh:"胡蘿蔔"},{word:"CHEESE",icon:"🧀",zh:"芝士"},{word:"COOKIE",icon:"🍪",zh:"曲奇"},
-        {word:"BURGER",icon:"🍔",zh:"漢堡"},{word:"BUTTER",icon:"🧈",zh:"牛油"},{word:"ROCKET",icon:"🚀",zh:"火箭"},{word:"GUITAR",icon:"🎸",zh:"吉他"},
-        {word:"VIOLIN",icon:"🎻",zh:"小提琴"},{word:"WINDOW",icon:"🪟",zh:"窗戶"},{word:"PENCIL",icon:"✏️",zh:"鉛筆"},{word:"CAMERA",icon:"📷",zh:"相機"},
-        {word:"FLOWER",icon:"🌸",zh:"鮮花"},{word:"FOREST",icon:"🌲",zh:"森林"},{word:"SUNNY",icon:"☀️",zh:"晴天"},{word:"JACKET",icon:"🧥",zh:"外套"},
-        {word:"SHORTS",icon:"🩳",zh:"短褲"},{word:"DOCTOR",icon:"🧑‍⚕️",zh:"醫生"},{word:"POLICE",icon:"👮",zh:"警察"},{word:"FAMILY",icon:"👨‍👩‍👧",zh:"家庭"},
-        {word:"MOTHER",icon:"👩",zh:"媽媽"},{word:"FATHER",icon:"👨",zh:"爸爸"},{word:"SISTER",icon:"👧",zh:"姊妹"},{word:"SCHOOL",icon:"🏫",zh:"學校"},
-        {word:"MARKET",icon:"🛒",zh:"街市"},{word:"DRAGON",icon:"🐉",zh:"飛龍"},{word:"CIRCUS",icon:"🎪",zh:"馬戲團"},{word:"PIRATE",icon:"🏴‍☠️",zh:"海盜"},
-        {word:"WIZARD",icon:"🧙",zh:"巫師"},{word:"CASTLE",icon:"🏰",zh:"城堡"},{word:"BRIDGE",icon:"🌉",zh:"大橋"},{word:"ISLAND",icon:"🏝️",zh:"海島"},
-        {word:"DESERT",icon:"🏜️",zh:"沙漠"},{word:"WINTER",icon:"❄️",zh:"冬天"},{word:"SUMMER",icon:"🏖️",zh:"夏天"},{word:"SPRING",icon:"🌸",zh:"春天"}
+        {word:"HAPPY",icon:"😊",zh:"快樂"},{word:"SMILE",icon:"😄",zh:"微笑"},{word:"WALK",icon:"🚶",zh:"步行"},{word:"RUNNING",icon:"🏃",zh:"跑步"},
+        {word:"JUMPING",icon:"🤸",zh:"跳躍"},{word:"SINGING",icon:"🎤",zh:"唱歌"},{word:"DANCING",icon:"💃",zh:"跳舞"},{word:"SLEEP",icon:"😴",zh:"睡覺"},
+        {word:"CLEAN",icon:"🧹",zh:"清潔"},{word:"WASH",icon:"🧼",zh:"洗手"},{word:"ELEPHANT",icon:"🐘",zh:"大象"},{word:"GIRAFFE",icon:"🦒",zh:"長頸鹿"},
+        {word:"PANDA",icon:"🐼",zh:"熊貓"},{word:"PENGUIN",icon:"🐧",zh:"企鵝"},{word:"DOLPHIN",icon:"🐬",zh:"海豚"},{word:"RAINBOW",icon:"🌈",zh:"彩虹"},{word:"FOREST",icon:"🌲",zh:"森林"},{word:"MOUNTAIN",icon:"⛰️",zh:"高山"},{word:"ISLAND",icon:"🏝️",zh:"海島"},{word:"WEATHER",icon:"🌤️",zh:"天氣"},{word:"SPRING",icon:"🌸",zh:"春天"},{word:"SUMMER",icon:"🏖️",zh:"夏天"},{word:"AUTUMN",icon:"🍂",zh:"秋天"},{word:"WINTER",icon:"❄️",zh:"冬天"},{word:"HOLIDAY",icon:"🧳",zh:"假期"}
       ],
+
+      // Level 5: 6-7歲 (Year 2 - 知識探險：科學、太空、歷史藝術與世界常識)
       5: [
-        {word:"GIRAFFE",icon:"🦒",zh:"長頸鹿"},{word:"ELEPHANT",icon:"🐘",zh:"大象"},{word:"DOLPHIN",icon:"🐬",zh:"海豚"},{word:"OCTOPUS",icon:"🐙",zh:"八爪魚"},
-        {word:"RAINBOW",icon:"🌈",zh:"彩虹"},{word:"AVOCADO",icon:"🥑",zh:"牛油果"},{word:"POPCORN",icon:"🍿",zh:"爆谷"},{word:"PANCAKE",icon:"🥞",zh:"班戟"},
-        {word:"BICYCLE",icon:"🚲",zh:"腳踏車"},{word:"TRACTOR",icon:"🚜",zh:"拖拉機"},{word:"SCOOTER",icon:"🛴",zh:"滑板車"},{word:"COMPUTER",icon:"💻",zh:"電腦"},
-        {word:"UMBRELLA",icon:"☂️",zh:"雨傘"},{word:"BALLOON",icon:"🎈",zh:"氣球"},{word:"FEATHER",icon:"🪶",zh:"羽毛"},{word:"VOLCANO",icon:"🌋",zh:"火山"},
-        {word:"MOUNTAIN",icon:"⛰️",zh:"高山"},{word:"SUNFLOWER",icon:"🌻",zh:"向日葵"},{word:"MUSHROOM",icon:"🍄",zh:"蘑菇"},{word:"NOTEBOOK",icon:"📓",zh:"筆記本"},
-        {word:"BACKPACK",icon:"🎒",zh:"背包"},{word:"SCISSORS",icon:"✂️",zh:"剪刀"},{word:"TEACHER",icon:"🧑‍🏫",zh:"老師"},{word:"PAINTER",icon:"🧑‍🎨",zh:"畫家"},
-        {word:"SINGING",icon:"🎤",zh:"唱歌"},{word:"DANCING",icon:"💃",zh:"跳舞"},{word:"FOOTBALL",icon:"⚽",zh:"足球"},{word:"BASEBALL",icon:"⚾",zh:"棒球"},
-        {word:"SWIMMING",icon:"🏊",zh:"游泳"},{word:"HOSPITAL",icon:"🏥",zh:"醫院"},{word:"PHARMACY",icon:"💊",zh:"藥房"},{word:"AIRPORT",icon:"✈️",zh:"機場"},
-        {word:"DINOSAUR",icon:"🦖",zh:"恐龍"},{word:"UNICORN",icon:"🦄",zh:"獨角獸"},{word:"MONSTER",icon:"👾",zh:"怪獸"},{word:"FIREWORKS",icon:"🎆",zh:"煙花"},
-        {word:"TELESCOPE",icon:"🔭",zh:"望遠鏡"},{word:"MICROSCOPE",icon:"🔬",zh:"顯微鏡"},{word:"COMPASS",icon:"🧭",zh:"指南針"},{word:"SANDWICH",icon:"🥪",zh:"三文治"},
-        {word:"CHOCOLATE",icon:"🍫",zh:"朱古力"},{word:"BUTTERFLY",icon:"🦋",zh:"蝴蝶"},{word:"LADYBUG",icon:"🐞",zh:"甲蟲"}
+        {word:"EARTH",icon:"🌍",zh:"地球"},{word:"PLANET",icon:"🪐",zh:"行星"},{word:"ROCKET",icon:"🚀",zh:"火箭"},{word:"ASTRONAUT",icon:"🧑‍🚀",zh:"宇航員"},
+        {word:"DINOSAUR",icon:"🦖",zh:"恐龍"},{word:"CASTLE",icon:"🏰",zh:"城堡"},{word:"KING",icon:"👑",zh:"國王"},{word:"QUEEN",icon:"👸",zh:"女王"},
+        {word:"MUSEUM",icon:"🏛️",zh:"博物館"},{word:"MUSIC",icon:"🎵",zh:"音樂"},{word:"GUITAR",icon:"🎸",zh:"吉他"},{word:"PAINTING",icon:"🎨",zh:"繪畫"},
+        {word:"CAMERA",icon:"📷",zh:"相機"},{word:"COMPUTER",icon:"💻",zh:"電腦"},{word:"TELESCOPE",icon:"🔭",zh:"望遠鏡"},{word:"COMPASS",icon:"🧭",zh:"指南針"},
+        {word:"VOLCANO",icon:"🌋",zh:"火山"},{word:"OCEAN",icon:"🌊",zh:"海洋"},{word:"BUTTERFLY",icon:"🦋",zh:"蝴蝶"},{word:"SUNFLOWER",icon:"🌻",zh:"向日葵"},
+        {word:"UMBRELLA",icon:"☂️",zh:"雨傘"},{word:"DRAGON",icon:"🐉",zh:"飛龍"},{word:"UNICORN",icon:"🦄",zh:"獨角獸"},{word:"TREASURE",icon:"💎",zh:"寶藏"},
+        {word:"SCIENCE",icon:"🔬",zh:"科學"}
       ]
     };
 
@@ -754,9 +734,9 @@
         choiceArea.style.display = 'block';
         
         if (currentLevel === 1 || currentLevel === 2) {
-          document.getElementById('instructionText').textContent = "點擊 🔊 聽單字發音，選出正確答案！";
+          document.getElementById('instructionText').textContent = "點擊 🔊 聽英式單字發音，選出正確答案！";
         } else {
-          document.getElementById('instructionText').textContent = "點擊圖片聽發音，選出正確答案！";
+          document.getElementById('instructionText').textContent = "點擊圖片聽英式發音，選出正確答案！";
         }
         
         updateMascot("🐻", "選出正確的單字！");
@@ -918,7 +898,7 @@
       starsCount += 1;
       document.getElementById('starScore').textContent = starsCount;
       
-      updateMascot("🥳", "超級厲害！");
+      updateMascot("🥳", "Brilliant!");
       triggerMascotBounce();
       triggerConfetti();
 
@@ -929,7 +909,7 @@
       document.getElementById('correctBadge').classList.add('show');
 
       setTimeout(function() {
-        speakText("Great! " + targetWord);
+        speakText("Brilliant! " + targetWord);
         document.getElementById('nextBtn').style.display = 'inline-block';
       }, 300);
     }
@@ -963,6 +943,7 @@
       } catch (e) {}
     }
 
+    // 發音切換為英式英語 (en-GB / British Accent)
     function speakText(text) {
       try {
         if ('speechSynthesis' in window) {
@@ -973,15 +954,19 @@
           
           var lower = text.toLowerCase();
           var utterance = new SpeechSynthesisUtterance(lower);
-          utterance.lang = 'en-US';
+          utterance.lang = 'en-GB'; // 設定為英式英語
           utterance.rate = speechRate;
           
           var voices = window.speechSynthesis.getVoices();
+          var ukVoice = null;
           for (var i = 0; i < voices.length; i++) {
-            if (voices[i].lang === 'en-US' || voices[i].lang === 'en_US') {
-              utterance.voice = voices[i];
+            if (voices[i].lang === 'en-GB' || voices[i].lang === 'en_GB') {
+              ukVoice = voices[i];
               break;
             }
+          }
+          if (ukVoice) {
+            utterance.voice = ukVoice;
           }
 
           window.speechSynthesis.speak(utterance);
