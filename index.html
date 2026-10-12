@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>幼兒英文單字學習遊戲</title>
+  <!-- 引入輕量級 Confetti 彩帶特效庫 -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <style>
     * {
       box-sizing: border-box;
@@ -21,7 +23,15 @@
       min-height: 100vh;
       margin: 0;
       padding: 10px;
+      transition: background 0.8s ease;
     }
+
+    /* 各關卡背景主題色 */
+    body.bg-lvl-1 { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%); }
+    body.bg-lvl-2 { background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); }
+    body.bg-lvl-3 { background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%); }
+    body.bg-lvl-4 { background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%); }
+    body.bg-lvl-5 { background: linear-gradient(135deg, #fccb90 0%, #d57eeb 100%); }
 
     .game-card {
       background: #ffffff;
@@ -89,10 +99,22 @@
       padding: 8px 16px;
       margin-bottom: 12px;
     }
+    
+    /* 吉祥物與動畫 */
     .mascot {
       font-size: 36px;
       cursor: pointer;
+      display: inline-block;
+      transition: transform 0.2s;
     }
+    .mascot.bounce {
+      animation: mascotBounce 0.5s ease;
+    }
+    @keyframes mascotBounce {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-12px) scale(1.2); }
+    }
+
     .score-board {
       font-size: 20px;
       font-weight: bold;
@@ -178,8 +200,22 @@
       cursor: pointer;
       touch-action: manipulation;
     }
+
+    /* 語速切換按鈕 */
+    .speed-btn {
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: bold;
+      background-color: #fff3bf;
+      color: #d9480f;
+      border: 2px solid #ffd43b;
+      border-radius: 12px;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
     .progress-text {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: bold;
       color: #495057;
     }
@@ -191,6 +227,10 @@
       padding: 12px;
       cursor: pointer;
       touch-action: manipulation;
+      transition: transform 0.15s;
+    }
+    .image-container:active {
+      transform: scale(0.98);
     }
     .image-icon {
       font-size: 85px;
@@ -254,6 +294,10 @@
       border-radius: 16px;
       cursor: pointer;
       touch-action: manipulation;
+      transition: transform 0.1s;
+    }
+    .letter-btn:active {
+      transform: translateY(3px);
     }
     .letter-btn:nth-child(5n+1) { background-color: #ff6b6b; box-shadow: 0 5px 0 #c92a2a; }
     .letter-btn:nth-child(5n+2) { background-color: #4c6ef5; box-shadow: 0 5px 0 #364fc7; }
@@ -287,6 +331,10 @@
       cursor: pointer;
       touch-action: manipulation;
       text-align: center;
+      transition: transform 0.1s;
+    }
+    .word-option-btn:active {
+      transform: translateY(2px);
     }
     .word-option-btn.correct {
       background-color: #d3f9d8 !important;
@@ -386,6 +434,7 @@
     <div id="gameScreen" style="display: none;">
       <div class="top-bar">
         <button class="back-btn" id="backBtn">➔ 返回選單</button>
+        <button class="speed-btn" id="speedToggleBtn">語速: 🐇 正常</button>
         <span class="progress-text" id="progressText">第 1 / 50 題</span>
       </div>
 
@@ -492,6 +541,7 @@
     var currentAnswer = [];
     var starsCount = 0;
     var isAnswered = false;
+    var speechRate = 0.8; // 預設正常語速
 
     function forceUnlockAudio() {
       try {
@@ -536,6 +586,26 @@
         forceUnlockAudio();
         showMenu();
       });
+
+      // 語速切換按鈕
+      document.getElementById('speedToggleBtn').addEventListener('click', function() {
+        forceUnlockAudio();
+        if (speechRate === 0.8) {
+          speechRate = 0.55;
+          this.textContent = '語速: 🐢 慢速';
+          this.style.backgroundColor = '#ffe3e3';
+          this.style.borderColor = '#ff6b6b';
+          this.style.color = '#c92a2a';
+        } else {
+          speechRate = 0.8;
+          this.textContent = '語速: 🐇 正常';
+          this.style.backgroundColor = '#fff3bf';
+          this.style.borderColor = '#ffd43b';
+          this.style.color = '#d9480f';
+        }
+        speakCurrentWord();
+      });
+
       document.getElementById('imageDisplay').addEventListener('click', function() {
         forceUnlockAudio();
         speakCurrentWord();
@@ -553,12 +623,17 @@
 
       document.getElementById('mascotBtn').addEventListener('click', function() {
         forceUnlockAudio();
+        triggerMascotBounce();
         speakText('Hello!');
       });
     });
 
     function startLevel(lvl) {
       currentLevel = lvl;
+      
+      // 切換背景主題色
+      document.body.className = 'bg-lvl-' + lvl;
+
       var raw = levelData[lvl] || levelData[1];
       questions = raw.slice().sort(function() { return Math.random() - 0.5; });
       currentIndex = 0;
@@ -572,6 +647,7 @@
     }
 
     function showMenu() {
+      document.body.className = '';
       document.getElementById('gameScreen').style.display = 'none';
       document.getElementById('menuScreen').style.display = 'block';
       updateMascot("🐻", "加油喔！");
@@ -580,6 +656,25 @@
     function updateMascot(emoji, text) {
       document.getElementById('mascotBtn').textContent = emoji;
       document.getElementById('mascotBubble').textContent = text;
+    }
+
+    function triggerMascotBounce() {
+      var mascot = document.getElementById('mascotBtn');
+      mascot.classList.remove('bounce');
+      void mascot.offsetWidth; // 觸發重繪
+      mascot.classList.add('bounce');
+    }
+
+    function triggerConfetti() {
+      try {
+        if (typeof confetti === 'function') {
+          confetti({
+            particleCount: 50,
+            spread: 60,
+            origin: { y: 0.6 }
+          });
+        }
+      } catch (e) {}
     }
 
     function initQuestion() {
@@ -688,7 +783,6 @@
 
             row.appendChild(btn);
 
-            // 僅 Level 1 和 Level 2 新增獨立 🔊 發聲按鈕
             if (currentLevel === 1 || currentLevel === 2) {
               var audioBtn = document.createElement('button');
               audioBtn.className = 'audio-btn';
@@ -815,7 +909,10 @@
       isAnswered = true;
       starsCount += 1;
       document.getElementById('starScore').textContent = starsCount;
+      
       updateMascot("🥳", "超級厲害！");
+      triggerMascotBounce();
+      triggerConfetti(); // 觸發彩帶特效
 
       playTone(523.25, 0.15);
       setTimeout(function() { playTone(659.25, 0.25); }, 150);
@@ -869,7 +966,7 @@
           var lower = text.toLowerCase();
           var utterance = new SpeechSynthesisUtterance(lower);
           utterance.lang = 'en-US';
-          utterance.rate = 0.8;
+          utterance.rate = speechRate; // 使用當前設定語速
           
           var voices = window.speechSynthesis.getVoices();
           for (var i = 0; i < voices.length; i++) {
