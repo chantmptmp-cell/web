@@ -2,7 +2,7 @@
 <html lang="zh-HK">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>幼兒英文單字學習遊戲</title>
   <!-- 引入輕量級 Confetti 彩帶特效庫 -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -46,11 +46,27 @@
       border: 4px solid #fff;
     }
 
-    /* 全螢幕狀態下的卡片調整 */
-    :fullscreen .game-card, :-webkit-full-screen .game-card {
-      max-width: 700px;
-      border-radius: 32px;
-      padding: 24px;
+    /* iOS & 通用 CSS 偽全螢幕效果 */
+    body.is-fullscreen {
+      padding: 0 !important;
+      overflow: hidden !important;
+    }
+    body.is-fullscreen .game-card {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      max-width: 100% !important;
+      border-radius: 0 !important;
+      border: none !important;
+      z-index: 99999 !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: space-between !important;
+      padding: env(safe-area-inset-top, 15px) 15px env(safe-area-inset-bottom, 15px) 15px !important;
     }
 
     .mute-notice {
@@ -64,7 +80,6 @@
       margin-bottom: 10px;
     }
 
-    /* 可點擊直接下一題的獎勵標籤 */
     .correct-badge {
       position: absolute;
       top: 45%;
@@ -107,7 +122,6 @@
       margin-bottom: 12px;
     }
     
-    /* 吉祥物與動畫 */
     .mascot {
       font-size: 36px;
       cursor: pointer;
@@ -208,7 +222,6 @@
       touch-action: manipulation;
     }
 
-    /* 頂部工具按鈕通用樣式 */
     .tool-btn {
       padding: 6px 12px;
       font-size: 13px;
@@ -263,7 +276,6 @@
       margin-top: 4px;
     }
 
-    /* 模式一：拼字樣式 */
     .answer-container {
       display: flex;
       justify-content: center;
@@ -321,7 +333,6 @@
     .letter-btn:nth-child(5n+5) { background-color: #cc5de8; box-shadow: 0 5px 0 #862e9c; }
     .letter-btn.disabled { visibility: hidden; }
 
-    /* 模式二：選擇題樣式 */
     .word-options-container {
       display: flex;
       flex-direction: column;
@@ -364,7 +375,6 @@
       box-shadow: 0 4px 0 #c92a2a !important;
     }
 
-    /* Level 1, 2 專用單字發聲小按鈕 */
     .audio-btn {
       width: 52px;
       height: 52px;
@@ -572,22 +582,30 @@
       } catch (e) {}
     }
 
-    /* 全螢幕功能邏輯 */
+    /* 相容 iOS 的全螢幕切換邏輯 */
     function toggleFullScreen() {
-      if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      var isFS = document.body.classList.contains('is-fullscreen');
+      
+      if (!isFS) {
+        // 先嘗試標準原生全螢幕 API
         var docEl = document.documentElement;
         if (docEl.requestFullscreen) {
-          docEl.requestFullscreen();
+          docEl.requestFullscreen().catch(function(){});
         } else if (docEl.webkitRequestFullscreen) {
-          docEl.webkitRequestFullscreen();
+          docEl.webkitRequestFullscreen().catch(function(){});
         }
+        
+        // 套用 CSS 滿版全螢幕模式
+        document.body.classList.add('is-fullscreen');
         document.getElementById('fullScreenBtn').textContent = '📺 視窗';
       } else {
         if (document.exitFullscreen) {
-          document.exitFullscreen();
+          document.exitFullscreen().catch(function(){});
         } else if (document.webkitExitFullscreen) {
-          document.webkitExitFullscreen();
+          document.webkitExitFullscreen().catch(function(){});
         }
+        
+        document.body.classList.remove('is-fullscreen');
         document.getElementById('fullScreenBtn').textContent = '🖥️ 全螢幕';
       }
     }
@@ -623,13 +641,11 @@
         showMenu();
       });
 
-      // 全螢幕切換
       document.getElementById('fullScreenBtn').addEventListener('click', function() {
         forceUnlockAudio();
         toggleFullScreen();
       });
 
-      // 語速切換
       document.getElementById('speedToggleBtn').addEventListener('click', function() {
         forceUnlockAudio();
         if (speechRate === 0.8) {
@@ -672,7 +688,7 @@
 
     function startLevel(lvl) {
       currentLevel = lvl;
-      document.body.className = 'bg-lvl-' + lvl;
+      document.body.className = (document.body.classList.contains('is-fullscreen') ? 'is-fullscreen ' : '') + 'bg-lvl-' + lvl;
 
       var raw = levelData[lvl] || levelData[1];
       questions = raw.slice().sort(function() { return Math.random() - 0.5; });
@@ -687,7 +703,8 @@
     }
 
     function showMenu() {
-      document.body.className = '';
+      var isFS = document.body.classList.contains('is-fullscreen');
+      document.body.className = isFS ? 'is-fullscreen' : '';
       document.getElementById('gameScreen').style.display = 'none';
       document.getElementById('menuScreen').style.display = 'block';
       updateMascot("🐻", "加油喔！");
