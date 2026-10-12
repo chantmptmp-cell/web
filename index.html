@@ -175,82 +175,62 @@
       background: #fff9db;
       border: 4px dashed #ffd43b;
       border-radius: 24px;
-      padding: 10px;
+      padding: 15px;
       cursor: pointer;
       touch-action: manipulation;
     }
     .image-icon {
-      font-size: 85px;
+      font-size: 90px;
       line-height: 1;
     }
     .chinese-hint {
-      font-size: 22px;
+      font-size: 24px;
       font-weight: bold;
       color: #d9480f;
-      margin-top: 4px;
+      margin-top: 6px;
     }
     .hint-text {
       color: #868e96;
       font-size: 13px;
-      margin-top: 4px;
+      margin-top: 6px;
     }
 
-    .answer-row {
+    /* 單字選擇按鈕區域 */
+    .word-options-container {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
+      flex-direction: column;
+      gap: 12px;
       margin: 20px 0;
     }
-    .answer-container {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-    .slot {
-      width: 48px;
-      height: 56px;
-      border-bottom: 4px solid #4dabf7;
-      font-size: 32px;
+    .word-option-btn {
+      padding: 16px 20px;
+      font-size: 24px;
       font-weight: bold;
-      color: transparent;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: #f1f3f5;
-      border-radius: 10px 10px 0 0;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-    .slot.show-trace {
-      color: rgba(25, 113, 194, 0.25);
-    }
-    .slot.filled {
-      color: #1971c2 !important;
+      letter-spacing: 1px;
+      color: #1c7ed6;
       background-color: #e7f5ff;
-      border-bottom-color: #1971c2;
-    }
-
-    .delete-btn {
-      width: 44px;
-      height: 56px;
-      background-color: #ff8787;
-      color: white;
-      font-size: 22px;
-      font-weight: bold;
-      border: none;
-      border-radius: 12px;
-      box-shadow: 0 4px 0 #e03131;
+      border: 3px solid #74c0fc;
+      border-radius: 18px;
+      box-shadow: 0 4px 0 #4dabf7;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       touch-action: manipulation;
+      transition: transform 0.1s, background-color 0.2s;
     }
-    .delete-btn:active {
+    .word-option-btn:active {
       transform: translateY(2px);
-      box-shadow: 0 2px 0 #e03131;
+      box-shadow: 0 2px 0 #4dabf7;
+    }
+    .word-option-btn.correct {
+      background-color: #d3f9d8 !important;
+      border-color: #40c057 !important;
+      color: #2b8a3e !important;
+      box-shadow: 0 4px 0 #2b8a3e !important;
+    }
+    .word-option-btn.wrong {
+      background-color: #ffe3e3 !important;
+      border-color: #ff6b6b !important;
+      color: #c92a2a !important;
+      box-shadow: 0 4px 0 #c92a2a !important;
     }
 
     @keyframes shake {
@@ -259,30 +239,6 @@
       40%, 80% { transform: translateX(8px); }
     }
     .shake { animation: shake 0.4s ease-in-out; }
-
-    .letters-container {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    .letter-btn {
-      width: 52px;
-      height: 52px;
-      color: white;
-      font-size: 28px;
-      font-weight: bold;
-      border: none;
-      border-radius: 16px;
-      cursor: pointer;
-      touch-action: manipulation;
-    }
-    .letter-btn:nth-child(5n+1) { background-color: #ff6b6b; box-shadow: 0 5px 0 #c92a2a; }
-    .letter-btn:nth-child(5n+2) { background-color: #4c6ef5; box-shadow: 0 5px 0 #364fc7; }
-    .letter-btn:nth-child(5n+3) { background-color: #51cf66; box-shadow: 0 5px 0 #2b8a3e; }
-    .letter-btn:nth-child(5n+4) { background-color: #fcc419; box-shadow: 0 5px 0 #e67700; color: #333; }
-    .letter-btn:nth-child(5n+5) { background-color: #cc5de8; box-shadow: 0 5px 0 #862e9c; }
-    .letter-btn.disabled { visibility: hidden; }
 
     .next-btn {
       margin-top: 15px;
@@ -316,16 +272,6 @@
     <div id="menuScreen">
       <h2>請選擇學習關卡 🎯</h2>
 
-      <div class="hint-selector-box">
-        <label>💡 請選擇提示輔助模式：</label>
-        <div class="hint-options">
-          <button class="hint-btn active" data-hint="trace">🔤 全字母虛線</button>
-          <button class="hint-btn" data-hint="random">🧩 隨機字母虛線</button>
-          <button class="hint-btn" data-hint="audio">🔊 純語音提示</button>
-          <button class="hint-btn" data-hint="none">🎯 無提示挑戰</button>
-        </div>
-      </div>
-
       <div class="level-menu">
         <button class="level-btn lvl-1" data-lvl="1">Level 1: 幼兒入門 (3字母) <span>50題</span></button>
         <button class="level-btn lvl-2" data-lvl="2">Level 2: 基礎進階 (4字母) <span>55題</span></button>
@@ -346,14 +292,10 @@
         <div class="image-icon" id="imageIcon">🐱</div>
         <div class="chinese-hint" id="chineseHint">貓咪</div>
       </div>
-      <div class="hint-text">點擊圖片聽發音（點選填錯的字可刪除）</div>
+      <div class="hint-text">點擊圖片聽發音，選出正確的英文單字！</div>
 
-      <div class="answer-row">
-        <div class="answer-container" id="answerSlots"></div>
-        <button class="delete-btn" id="deleteBtn" title="刪除最後一個字母">⌫</button>
-      </div>
-
-      <div class="letters-container" id="letterPool"></div>
+      <!-- 下方單字選擇區 -->
+      <div class="word-options-container" id="wordOptions"></div>
 
       <button class="next-btn" id="nextBtn">下一題 ➔</button>
     </div>
@@ -434,13 +376,11 @@
       ]
     };
 
-    var selectedHintMode = 'trace';
     var currentLevel = 1;
     var questions = [];
     var currentIndex = 0;
-    var currentAnswer = [];
-    var currentTraceMask = [];
     var starsCount = 0;
+    var isAnswered = false;
 
     function forceUnlockAudio() {
       try {
@@ -462,16 +402,6 @@
         };
       }
 
-      var hintBtns = document.querySelectorAll('.hint-btn');
-      hintBtns.forEach(function(btn) {
-        btn.addEventListener('click', function() {
-          forceUnlockAudio();
-          hintBtns.forEach(function(b) { b.classList.remove('active'); });
-          btn.classList.add('active');
-          selectedHintMode = btn.getAttribute('data-hint');
-        });
-      });
-
       var levelBtns = document.querySelectorAll('.level-btn');
       levelBtns.forEach(function(btn) {
         btn.addEventListener('click', function() {
@@ -492,10 +422,6 @@
       document.getElementById('nextBtn').addEventListener('click', function() {
         forceUnlockAudio();
         loadNextQuestion();
-      });
-      document.getElementById('deleteBtn').addEventListener('click', function() {
-        forceUnlockAudio();
-        deleteLastLetter();
       });
       document.getElementById('mascotBtn').addEventListener('click', function() {
         forceUnlockAudio();
@@ -532,162 +458,56 @@
       var q = questions[currentIndex];
       if (!q) return;
 
+      isAnswered = false;
       document.getElementById('imageIcon').textContent = q.icon;
       document.getElementById('chineseHint').textContent = q.zh || "";
       document.getElementById('nextBtn').style.display = 'none';
       document.getElementById('correctBadge').classList.remove('show');
       document.getElementById('progressText').textContent = "第 " + (currentIndex + 1) + " / " + questions.length + " 題";
-      currentAnswer = [];
 
-      // 隨機提示遮碼生成
-      currentTraceMask = [];
-      var wordLen = q.word.length;
-      var revealCount = Math.max(1, Math.floor(wordLen / 2));
-      var posList = [];
-      for (var p = 0; p < wordLen; p++) posList.push(p);
-      posList.sort(function() { return Math.random() - 0.5; });
-      var chosenPos = posList.slice(0, revealCount);
+      updateMascot("🐻", "選出正確的單字！");
+      speakCurrentWord();
 
-      for (var m = 0; m < wordLen; m++) {
-        var isChosen = false;
-        for (var c = 0; c < chosenPos.length; c++) {
-          if (chosenPos[c] === m) {
-            isChosen = true;
-            break;
-          }
-        }
-        currentTraceMask.push(isChosen);
+      // 建立選項（1個正確答案 + 2個隨機幹擾項）
+      var currentList = levelData[currentLevel] || levelData[1];
+      var wrongCandidates = currentList.filter(function(item) {
+        return item.word !== q.word;
+      });
+      wrongCandidates.sort(function() { return Math.random() - 0.5; });
+
+      var options = [q.word];
+      for (var i = 0; i < Math.min(2, wrongCandidates.length); i++) {
+        options.push(wrongCandidates[i].word);
       }
+      options.sort(function() { return Math.random() - 0.5; });
 
-      updateMascot("🐻", "一起拼出來吧！");
+      var optionsContainer = document.getElementById('wordOptions');
+      optionsContainer.innerHTML = '';
+      optionsContainer.classList.remove('shake');
 
-      if (selectedHintMode !== 'none') {
-        speakCurrentWord();
-      }
-
-      var slotsContainer = document.getElementById('answerSlots');
-      slotsContainer.innerHTML = '';
-      slotsContainer.classList.remove('shake');
-      
-      for (var i = 0; i < q.word.length; i++) {
-        (function(index) {
-          var slot = document.createElement('div');
-          slot.className = 'slot';
-          
-          var showLetter = false;
-          if (selectedHintMode === 'trace') {
-            showLetter = true;
-          } else if (selectedHintMode === 'random') {
-            showLetter = currentTraceMask[index];
-          }
-
-          if (showLetter) {
-            slot.textContent = q.word[index];
-            slot.classList.add('show-trace');
-          } else {
-            slot.textContent = '';
-          }
-
-          slot.addEventListener('click', function() {
-            forceUnlockAudio();
-            removeSlotAt(index);
-          });
-          
-          slotsContainer.appendChild(slot);
-        })(i);
-      }
-
-      var letters = q.word.split('');
-      var extraCount = currentLevel >= 3 ? 3 : 2;
-      for (var j = 0; j < extraCount; j++) {
-        letters.push(String.fromCharCode(65 + Math.floor(Math.random() * 26)));
-      }
-      letters.sort(function() { return Math.random() - 0.5; });
-
-      var poolContainer = document.getElementById('letterPool');
-      poolContainer.innerHTML = '';
-      for (var k = 0; k < letters.length; k++) {
-        (function(char) {
+      for (var j = 0; j < options.length; j++) {
+        (function(wordChoice) {
           var btn = document.createElement('button');
-          btn.className = 'letter-btn';
-          btn.textContent = char;
-          btn.addEventListener('click', function() { 
+          btn.className = 'word-option-btn';
+          btn.textContent = wordChoice;
+          btn.addEventListener('click', function() {
             forceUnlockAudio();
-            selectLetter(btn, char); 
+            checkOption(btn, wordChoice, q.word);
           });
-          poolContainer.appendChild(btn);
-        })(letters[k]);
+          optionsContainer.appendChild(btn);
+        })(options[j]);
       }
     }
 
-    function selectLetter(btn, char) {
-      var targetWord = questions[currentIndex].word;
-      if (currentAnswer.length < targetWord.length) {
-        currentAnswer.push({ char: char, btnRef: btn });
-        btn.classList.add('disabled');
-        
-        triggerHaptic(15);
-        speakText(char);
+    function checkOption(btn, selectedWord, targetWord) {
+      if (isAnswered) return;
 
-        var slots = document.querySelectorAll('.slot');
-        var activeSlot = slots[currentAnswer.length - 1];
-        if (activeSlot) {
-          activeSlot.textContent = char;
-          activeSlot.classList.add('filled');
-        }
-
-        if (currentAnswer.length === targetWord.length) {
-          checkAnswer();
-        }
-      }
-    }
-
-    function deleteLastLetter() {
-      if (currentAnswer.length > 0) {
-        removeSlotAt(currentAnswer.length - 1);
-      }
-    }
-
-    function removeSlotAt(index) {
-      if (index >= 0 && index < currentAnswer.length) {
-        var item = currentAnswer[index];
-        item.btnRef.classList.remove('disabled');
-
-        var targetWord = questions[currentIndex].word;
-        var slots = document.querySelectorAll('.slot');
-        
-        currentAnswer.splice(index, 1);
-
-        for (var i = 0; i < slots.length; i++) {
-          if (i < currentAnswer.length) {
-            slots[i].textContent = currentAnswer[i].char;
-            slots[i].classList.add('filled');
-          } else {
-            var showLetter = false;
-            if (selectedHintMode === 'trace') {
-              showLetter = true;
-            } else if (selectedHintMode === 'random') {
-              showLetter = currentTraceMask[i];
-            }
-            slots[i].textContent = showLetter ? targetWord[i] : '';
-            slots[i].classList.remove('filled');
-          }
-        }
-      }
-    }
-
-    function checkAnswer() {
-      var userWord = "";
-      for (var i = 0; i < currentAnswer.length; i++) {
-        userWord += currentAnswer[i].char;
-      }
-      var targetWord = questions[currentIndex].word;
-      var slotsContainer = document.getElementById('answerSlots');
-
-      if (userWord === targetWord) {
+      if (selectedWord === targetWord) {
+        isAnswered = true;
+        btn.classList.add('correct');
         starsCount += 1;
         document.getElementById('starScore').textContent = starsCount;
-        updateMascot("🥳", "超級厲害！");
+        updateMascot("🥳", "答對了！太棒了！");
 
         playTone(523.25, 0.15);
         setTimeout(function() { playTone(659.25, 0.25); }, 150);
@@ -700,40 +520,15 @@
           document.getElementById('nextBtn').style.display = 'inline-block';
         }, 300);
       } else {
-        updateMascot("💪", "加油！再試一次！");
+        btn.classList.add('wrong');
+        updateMascot("💪", "再試一次喔！");
         playTone(196.00, 0.3);
-        slotsContainer.classList.add('shake');
         triggerHaptic([100, 50, 100]);
+        speakText("Try again!");
 
         setTimeout(function() {
-          speakText("Try again!");
-          resetCurrentQuestion();
-        }, 600);
-      }
-    }
-
-    function resetCurrentQuestion() {
-      var targetWord = questions[currentIndex].word;
-      currentAnswer = [];
-      var slotsContainer = document.getElementById('answerSlots');
-      slotsContainer.classList.remove('shake');
-
-      var slots = document.querySelectorAll('.slot');
-      for (var i = 0; i < slots.length; i++) {
-        var showLetter = false;
-        if (selectedHintMode === 'trace') {
-          showLetter = true;
-        } else if (selectedHintMode === 'random') {
-          showLetter = currentTraceMask[i];
-        }
-
-        slots[i].textContent = showLetter ? targetWord[i] : '';
-        slots[i].classList.remove('filled');
-      }
-
-      var btns = document.querySelectorAll('.letter-btn');
-      for (var j = 0; j < btns.length; j++) {
-        btns[j].classList.remove('disabled');
+          btn.classList.remove('wrong');
+        }, 800);
       }
     }
 
