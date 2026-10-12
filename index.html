@@ -266,11 +266,17 @@
     .word-options-container {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
       margin: 18px 0;
     }
+    .word-option-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
     .word-option-btn {
-      padding: 14px 20px;
+      flex: 1;
+      padding: 14px 16px;
       font-size: 22px;
       font-weight: bold;
       color: #1c7ed6;
@@ -280,6 +286,7 @@
       box-shadow: 0 4px 0 #4dabf7;
       cursor: pointer;
       touch-action: manipulation;
+      text-align: center;
     }
     .word-option-btn.correct {
       background-color: #d3f9d8 !important;
@@ -292,6 +299,27 @@
       border-color: #ff6b6b !important;
       color: #c92a2a !important;
       box-shadow: 0 4px 0 #c92a2a !important;
+    }
+
+    /* Level 1, 2 專用單字發聲小按鈕 */
+    .audio-btn {
+      width: 52px;
+      height: 52px;
+      font-size: 22px;
+      background-color: #fff3bf;
+      border: 3px solid #fcc419;
+      border-radius: 16px;
+      box-shadow: 0 4px 0 #fab005;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      touch-action: manipulation;
+      flex-shrink: 0;
+    }
+    .audio-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 #fab005;
     }
 
     @keyframes shake {
@@ -621,7 +649,13 @@
       } else {
         spellingArea.style.display = 'none';
         choiceArea.style.display = 'block';
-        document.getElementById('instructionText').textContent = "點擊圖片聽發音，選出正確的英文單字！";
+        
+        if (currentLevel === 1 || currentLevel === 2) {
+          document.getElementById('instructionText').textContent = "點擊 🔊 聽單字發音，選出正確答案！";
+        } else {
+          document.getElementById('instructionText').textContent = "點擊圖片聽發音，選出正確答案！";
+        }
+        
         updateMascot("🐻", "選出正確的單字！");
 
         var currentList = levelData[currentLevel] || levelData[1];
@@ -641,6 +675,9 @@
 
         for (var j2 = 0; j2 < options.length; j2++) {
           (function(wordChoice) {
+            var row = document.createElement('div');
+            row.className = 'word-option-row';
+
             var btn = document.createElement('button');
             btn.className = 'word-option-btn';
             btn.textContent = wordChoice;
@@ -648,7 +685,23 @@
               forceUnlockAudio();
               checkOption(btn, wordChoice, q.word);
             });
-            optionsContainer.appendChild(btn);
+
+            row.appendChild(btn);
+
+            // 僅 Level 1 和 Level 2 新增獨立 🔊 發聲按鈕
+            if (currentLevel === 1 || currentLevel === 2) {
+              var audioBtn = document.createElement('button');
+              audioBtn.className = 'audio-btn';
+              audioBtn.textContent = '🔊';
+              audioBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                forceUnlockAudio();
+                speakText(wordChoice);
+              });
+              row.appendChild(audioBtn);
+            }
+
+            optionsContainer.appendChild(row);
           })(options[j2]);
         }
       }
