@@ -183,7 +183,6 @@
       outline: none;
     }
 
-    /* 主題分類選單 */
     .topics-container {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -326,9 +325,11 @@
       margin-top: 4px;
     }
     .hint-text {
-      color: #868e96;
-      font-size: 13px;
-      margin-top: 4px;
+      color: #e65c00;
+      font-size: 14px;
+      font-weight: bold;
+      margin-top: 6px;
+      min-height: 20px;
     }
 
     .answer-container {
@@ -412,7 +413,7 @@
       cursor: pointer;
       touch-action: manipulation;
       text-align: center;
-      transition: transform 0.1s;
+      transition: all 0.2s;
     }
     .word-option-btn:active {
       transform: translateY(2px);
@@ -428,6 +429,11 @@
       border-color: #ff6b6b !important;
       color: #c92a2a !important;
       box-shadow: 0 4px 0 #c92a2a !important;
+    }
+    .word-option-btn.locked {
+      opacity: 0.4;
+      pointer-events: none;
+      filter: grayscale(80%);
     }
 
     .audio-btn {
@@ -518,6 +524,14 @@
       </div>
 
       <div class="setting-box">
+        <label class="title">🔊 答案選項旁的發音按鈕：</label>
+        <select class="count-select" id="optionAudioBtnToggleSelect">
+          <option value="on">🔊 開啟（選項旁顯示 🔊 小發音按鈕）</option>
+          <option value="off">🔇 關閉（隱藏選項發音按鈕，僅看字選擇）</option>
+        </select>
+      </div>
+
+      <div class="setting-box">
         <label class="title">🎲 每次練習題目數量：</label>
         <select class="count-select" id="customCountSelect">
           <option value="default">預設關卡題數 (5~25題)</option>
@@ -577,7 +591,6 @@
 
     // 依 Level 與 Topic 細分題庫
     var levelCategorizedData = {
-      // Level 1: 2-3歲 啟蒙核心詞
       1: {
         "身體部位": [
           {word:"EYE",icon:"👁️",zh:"眼睛"},{word:"EAR",icon:"👂",zh:"耳朵"},{word:"NOSE",icon:"👃",zh:"鼻子"},
@@ -615,8 +628,6 @@
           {word:"TEN",icon:"🔟",zh:"數字10"}
         ]
       },
-
-      // Level 2: 3-4歲 幼兒日常生活
       2: {
         "美味水果": [
           {word:"APPLE",icon:"🍎",zh:"蘋果"},{word:"BANANA",icon:"🍌",zh:"香蕉"},{word:"LEMON",icon:"🍋",zh:"檸檬"},
@@ -645,8 +656,6 @@
           {word:"CLOUD",icon:"☁️",zh:"白雲"},{word:"LEAF",icon:"🍃",zh:"樹葉"}
         ]
       },
-
-      // Level 3: 4-5歲 學校與社區
       3: {
         "校園學習": [
           {word:"SCHOOL",icon:"🏫",zh:"學校"},{word:"TEACHER",icon:"🧑‍🏫",zh:"老師"},{word:"PENCIL",icon:"✏️",zh:"鉛筆"},
@@ -669,8 +678,6 @@
           {word:"PANDA",icon:"🐼",zh:"熊貓"},{word:"RABBIT",icon:"🐰",zh:"兔子"}
         ]
       },
-
-      // Level 4: 5-6歲 探索與自然
       4: {
         "情緒與動作": [
           {word:"HAPPY",icon:"😊",zh:"快樂"},{word:"SMILE",icon:"😄",zh:"微笑"},{word:"WALK",icon:"🚶",zh:"步行"},
@@ -688,8 +695,6 @@
           {word:"SPRING",icon:"🌸",zh:"春天"},{word:"RAINBOW",icon:"🌈",zh:"彩虹"}
         ]
       },
-
-      // Level 5: 6-7歲 知識達人
       5: {
         "太空宇宙": [
           {word:"EARTH",icon:"🌍",zh:"地球"},{word:"PLANET",icon:"🪐",zh:"行星"},{word:"ROCKET",icon:"🚀",zh:"火箭"},
@@ -715,6 +720,8 @@
     var starsCount = 0;
     var isAnswered = false;
     var speechRate = 0.8;
+    var isOptionAudioBtnEnabled = true;
+    var wrongAttempts = 0;
 
     function forceUnlockAudio() {
       try {
@@ -746,7 +753,6 @@
         });
       });
 
-      // 點擊關卡按鈕進入「主題選擇選單」
       var levelBtns = document.querySelectorAll('.level-btn');
       levelBtns.forEach(function(btn) {
         btn.addEventListener('click', function() {
@@ -821,7 +827,6 @@
       });
     });
 
-    // 打開主題選單並渲染分類
     function openTopicMenu(lvl) {
       document.getElementById('menuScreen').style.display = 'none';
       document.getElementById('topicScreen').style.display = 'block';
@@ -841,7 +846,7 @@
           var checkbox = document.createElement('input');
           checkbox.type = 'checkbox';
           checkbox.value = topicName;
-          checkbox.checked = true; // 預設全選
+          checkbox.checked = true;
 
           label.appendChild(checkbox);
           label.appendChild(document.createTextNode(topicName + " (" + topicsObj[topicName].length + "題)"));
@@ -850,13 +855,15 @@
       }
     }
 
-    // 根據選擇的主題組合題目池並開始遊戲
     function startGameWithTopics() {
       var checkboxes = document.querySelectorAll('#topicsContainer input[type="checkbox"]:checked');
       if (checkboxes.length === 0) {
         alert("請至少勾選一個練習主題喔！");
         return;
       }
+
+      var audioToggleVal = document.getElementById('optionAudioBtnToggleSelect').value;
+      isOptionAudioBtnEnabled = (audioToggleVal === 'on');
 
       var topicsObj = levelCategorizedData[selectedLevel] || levelCategorizedData[1];
       var combinedPool = [];
@@ -868,14 +875,12 @@
         }
       });
 
-      // 設定抽題數量
       var selectVal = document.getElementById('customCountSelect').value;
       var targetCount = defaultLevelCounts[selectedLevel] || 10;
       if (selectVal !== 'default') {
         targetCount = parseInt(selectVal);
       }
 
-      // 洗牌並抽出題目
       var shuffled = combinedPool.slice().sort(function() { return Math.random() - 0.5; });
       questions = shuffled.slice(0, Math.min(targetCount, shuffled.length));
       currentIndex = 0;
@@ -921,12 +926,41 @@
       } catch (e) {}
     }
 
+    // 取得智能防撞題動態干擾項 (Smart Distractors)
+    function getSmartDistractors(targetWord, fullList, count) {
+      var candidates = fullList.filter(function(item) {
+        return item.word !== targetWord;
+      });
+
+      // 優先權計分：長度相同 +2，首字母相同 +3，末字母相同 +1
+      candidates.sort(function(a, b) {
+        var scoreA = 0;
+        var scoreB = 0;
+
+        if (a.word.length === targetWord.length) scoreA += 2;
+        if (b.word.length === targetWord.length) scoreB += 2;
+
+        if (a.word[0] === targetWord[0]) scoreA += 3;
+        if (b.word[0] === targetWord[0]) scoreB += 3;
+
+        if (a.word[a.word.length - 1] === targetWord[targetWord.length - 1]) scoreA += 1;
+        if (b.word[b.word.length - 1] === targetWord[targetWord.length - 1]) scoreB += 1;
+
+        // 加隨機擾動防止每次干擾項完全一樣
+        return (scoreB + Math.random()) - (scoreA + Math.random());
+      });
+
+      var selected = candidates.slice(0, count).map(function(item) { return item.word; });
+      return selected;
+    }
+
     function initQuestion() {
       var q = questions[currentIndex];
       if (!q) return;
 
       isAnswered = false;
       currentAnswer = [];
+      wrongAttempts = 0;
 
       document.getElementById('imageIcon').textContent = q.icon;
       document.getElementById('chineseHint').textContent = q.zh || "";
@@ -942,7 +976,7 @@
       if (currentMode === 'spelling') {
         spellingArea.style.display = 'block';
         choiceArea.style.display = 'none';
-        document.getElementById('instructionText').textContent = "點擊圖片聽發音（點選填錯的字可退回）";
+        document.getElementById('instructionText').textContent = "點擊圖片聽英式發音（點選填錯的字可退回）";
         updateMascot("🐻", "一起拼出來吧！");
 
         var slotsContainer = document.getElementById('answerSlots');
@@ -989,24 +1023,20 @@
         spellingArea.style.display = 'none';
         choiceArea.style.display = 'block';
         
-        if (selectedLevel === 1 || selectedLevel === 2) {
-          document.getElementById('instructionText').textContent = "點擊 🔊 聽英式單字發音，選出正確答案！";
-        } else {
-          document.getElementById('instructionText').textContent = "點擊圖片聽英式發音，選出正確答案！";
-        }
-        
+        document.getElementById('instructionText').textContent = "點擊圖片聽英式發音，選出正確答案！";
         updateMascot("🐻", "選出正確的單字！");
 
-        var currentList = questions;
-        var wrongCandidates = currentList.filter(function(item) {
-          return item.word !== q.word;
-        });
-        wrongCandidates.sort(function() { return Math.random() - 0.5; });
-
-        var options = [q.word];
-        for (var i2 = 0; i2 < Math.min(2, wrongCandidates.length); i2++) {
-          options.push(wrongCandidates[i2].word);
+        // 取得全題庫以搜尋高品質動態干擾項
+        var allList = [];
+        var levelDataObj = levelCategorizedData[selectedLevel] || levelCategorizedData[1];
+        for (var key in levelDataObj) {
+          allList = allList.concat(levelDataObj[key]);
         }
+
+        var distractors = getSmartDistractors(q.word, allList, 2);
+        var options = [q.word].concat(distractors);
+        
+        // 洗牌打亂選項順序
         options.sort(function() { return Math.random() - 0.5; });
 
         var optionsContainer = document.getElementById('wordOptions');
@@ -1027,7 +1057,7 @@
 
             row.appendChild(btn);
 
-            if (selectedLevel === 1 || selectedLevel === 2) {
+            if (isOptionAudioBtnEnabled) {
               var audioBtn = document.createElement('button');
               audioBtn.className = 'audio-btn';
               audioBtn.textContent = '🔊';
@@ -1100,10 +1130,15 @@
       if (userWord === targetWord) {
         handleSuccess(targetWord);
       } else {
+        wrongAttempts++;
         updateMascot("💪", "再試一次喔！");
         playTone(196.00, 0.3);
         slotsContainer.classList.add('shake');
         triggerHaptic([100, 50, 100]);
+
+        // 提供引導性 Hint
+        var hintMsg = "開頭字母是 " + targetWord[0] + " 喔！";
+        document.getElementById('instructionText').textContent = "💡 提示：" + hintMsg;
 
         setTimeout(function() {
           speakText("Try again!");
@@ -1137,10 +1172,18 @@
         btn.classList.add('correct');
         handleSuccess(targetWord);
       } else {
+        wrongAttempts++;
         btn.classList.add('wrong');
+        btn.classList.add('locked'); // 鎖定錯誤選項防止快點撞答案
+        
         updateMascot("💪", "再試一次喔！");
         playTone(196.00, 0.3);
         triggerHaptic([100, 50, 100]);
+
+        // 提供引導性 Hint
+        var hintMsg = "這個字的開頭是字母 " + targetWord[0] + " 喔！";
+        document.getElementById('instructionText').textContent = "💡 提示：" + hintMsg;
+        
         speakText("Try again!");
 
         setTimeout(function() {
@@ -1151,9 +1194,13 @@
 
     function handleSuccess(targetWord) {
       isAnswered = true;
-      starsCount += 1;
-      document.getElementById('starScore').textContent = starsCount;
       
+      // 依答錯次數計算獎勵（一次答對給星星）
+      if (wrongAttempts === 0) {
+        starsCount += 1;
+        document.getElementById('starScore').textContent = starsCount;
+      }
+
       updateMascot("🥳", "Brilliant!");
       triggerMascotBounce();
       triggerConfetti();
