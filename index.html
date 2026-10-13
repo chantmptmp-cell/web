@@ -589,7 +589,6 @@
   <script>
     var defaultLevelCounts = { 1: 5, 2: 10, 3: 15, 4: 20, 5: 25 };
 
-    // 依 Level 與 Topic 細分題庫
     var levelCategorizedData = {
       1: {
         "身體部位": [
@@ -722,6 +721,7 @@
     var speechRate = 0.8;
     var isOptionAudioBtnEnabled = true;
     var wrongAttempts = 0;
+    var currentOptionChoices = []; // 儲存目前選擇題模式的選項清單
 
     function forceUnlockAudio() {
       try {
@@ -926,13 +926,11 @@
       } catch (e) {}
     }
 
-    // 取得智能防撞題動態干擾項 (Smart Distractors)
     function getSmartDistractors(targetWord, fullList, count) {
       var candidates = fullList.filter(function(item) {
         return item.word !== targetWord;
       });
 
-      // 優先權計分：長度相同 +2，首字母相同 +3，末字母相同 +1
       candidates.sort(function(a, b) {
         var scoreA = 0;
         var scoreB = 0;
@@ -946,7 +944,6 @@
         if (a.word[a.word.length - 1] === targetWord[targetWord.length - 1]) scoreA += 1;
         if (b.word[b.word.length - 1] === targetWord[targetWord.length - 1]) scoreB += 1;
 
-        // 加隨機擾動防止每次干擾項完全一樣
         return (scoreB + Math.random()) - (scoreA + Math.random());
       });
 
@@ -1026,7 +1023,6 @@
         document.getElementById('instructionText').textContent = "點擊圖片聽英式發音，選出正確答案！";
         updateMascot("🐻", "選出正確的單字！");
 
-        // 取得全題庫以搜尋高品質動態干擾項
         var allList = [];
         var levelDataObj = levelCategorizedData[selectedLevel] || levelCategorizedData[1];
         for (var key in levelDataObj) {
@@ -1034,44 +1030,53 @@
         }
 
         var distractors = getSmartDistractors(q.word, allList, 2);
-        var options = [q.word].concat(distractors);
-        
-        // 洗牌打亂選項順序
-        options.sort(function() { return Math.random() - 0.5; });
+        currentOptionChoices = [q.word].concat(distractors);
 
-        var optionsContainer = document.getElementById('wordOptions');
-        optionsContainer.innerHTML = '';
+        // 渲染選單（包含隨機打亂）
+        renderChoiceOptions();
+      }
+    }
 
-        for (var j2 = 0; j2 < options.length; j2++) {
-          (function(wordChoice) {
-            var row = document.createElement('div');
-            row.className = 'word-option-row';
+    // 獨立出來渲染選項，答錯或進入新題目均可再次呼叫重新打亂
+    function renderChoiceOptions() {
+      var q = questions[currentIndex];
+      if (!q) return;
 
-            var btn = document.createElement('button');
-            btn.className = 'word-option-btn';
-            btn.textContent = wordChoice;
-            btn.addEventListener('click', function() {
+      // 每次渲染皆重新洗牌打亂順序
+      currentOptionChoices.sort(function() { return Math.random() - 0.5; });
+
+      var optionsContainer = document.getElementById('wordOptions');
+      optionsContainer.innerHTML = '';
+
+      for (var j = 0; j < currentOptionChoices.length; j++) {
+        (function(wordChoice) {
+          var row = document.createElement('div');
+          row.className = 'word-option-row';
+
+          var btn = document.createElement('button');
+          btn.className = 'word-option-btn';
+          btn.textContent = wordChoice;
+          btn.addEventListener('click', function() {
+            forceUnlockAudio();
+            checkOption(btn, wordChoice, q.word);
+          });
+
+          row.appendChild(btn);
+
+          if (isOptionAudioBtnEnabled) {
+            var audioBtn = document.createElement('button');
+            audioBtn.className = 'audio-btn';
+            audioBtn.textContent = '🔊';
+            audioBtn.addEventListener('click', function(e) {
+              e.stopPropagation();
               forceUnlockAudio();
-              checkOption(btn, wordChoice, q.word);
+              speakText(wordChoice);
             });
+            row.appendChild(audioBtn);
+          }
 
-            row.appendChild(btn);
-
-            if (isOptionAudioBtnEnabled) {
-              var audioBtn = document.createElement('button');
-              audioBtn.className = 'audio-btn';
-              audioBtn.textContent = '🔊';
-              audioBtn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                forceUnlockAudio();
-                speakText(wordChoice);
-              });
-              row.appendChild(audioBtn);
-            }
-
-            optionsContainer.appendChild(row);
-          })(options[j2]);
-        }
+          optionsContainer.appendChild(row);
+        })(currentOptionChoices[j]);
       }
     }
 
@@ -1136,7 +1141,6 @@
         slotsContainer.classList.add('shake');
         triggerHaptic([100, 50, 100]);
 
-        // 提供引導性 Hint
         var hintMsg = "開頭字母是 " + targetWord[0] + " 喔！";
         document.getElementById('instructionText').textContent = "💡 提示：" + hintMsg;
 
@@ -1174,28 +1178,26 @@
       } else {
         wrongAttempts++;
         btn.classList.add('wrong');
-        btn.classList.add('locked'); // 鎖定錯誤選項防止快點撞答案
         
         updateMascot("💪", "再試一次喔！");
         playTone(196.00, 0.3);
         triggerHaptic([100, 50, 100]);
 
-        // 提供引導性 Hint
         var hintMsg = "這個字的開頭是字母 " + targetWord[0] + " 喔！";
         document.getElementById('instructionText').textContent = "💡 提示：" + hintMsg;
         
         speakText("Try again!");
 
+        // 答錯後短暫顯示紅框，隨後重新隨機打亂所有選項位置！
         setTimeout(function() {
-          btn.classList.remove('wrong');
-        }, 800);
+          renderChoiceOptions();
+        }, 700);
       }
     }
 
     function handleSuccess(targetWord) {
       isAnswered = true;
       
-      // 依答錯次數計算獎勵（一次答對給星星）
       if (wrongAttempts === 0) {
         starsCount += 1;
         document.getElementById('starScore').textContent = starsCount;
