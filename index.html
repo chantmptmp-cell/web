@@ -430,9 +430,12 @@
       color: #c92a2a !important;
       box-shadow: 0 4px 0 #c92a2a !important;
     }
-    .word-option-btn.locked {
-      opacity: 0.5;
+    /* 鎖定狀態樣式，嚴格封鎖滑鼠與觸控事件 */
+    .word-option-btn[disabled], .word-option-btn.locked {
+      opacity: 0.5 !important;
       pointer-events: none !important;
+      cursor: not-allowed !important;
+      filter: grayscale(50%);
     }
 
     .audio-btn {
@@ -717,7 +720,7 @@
     var currentAnswer = [];
     var starsCount = 0;
     var isAnswered = false;
-    var isShuffling = false; // 紀錄是否正處於答錯洗牌鎖定狀態
+    var isShuffling = false; // 全域變數：洗牌鎖定狀態
     var speechRate = 0.8;
     var isOptionAudioBtnEnabled = true;
     var wrongAttempts = 0;
@@ -1033,16 +1036,15 @@
         var distractors = getSmartDistractors(q.word, allList, 2);
         currentOptionChoices = [q.word].concat(distractors);
 
-        renderChoiceOptions(false); // 初始生成解鎖狀態
+        renderChoiceOptions(false);
       }
     }
 
-    // 渲染選擇題選項 (lockState: 是否強制鎖定)
+    // 渲染選擇題選項 (lockState: 是否強制給予 disabled 屬性)
     function renderChoiceOptions(lockState) {
       var q = questions[currentIndex];
       if (!q) return;
 
-      // 每次渲染均重新隨機打亂順序
       currentOptionChoices.sort(function() { return Math.random() - 0.5; });
 
       var optionsContainer = document.getElementById('wordOptions');
@@ -1055,11 +1057,16 @@
 
           var btn = document.createElement('button');
           btn.className = 'word-option-btn';
+          btn.textContent = wordChoice;
+          
           if (lockState) {
+            btn.disabled = true;
             btn.classList.add('locked');
           }
-          btn.textContent = wordChoice;
-          btn.addEventListener('click', function() {
+
+          btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
             forceUnlockAudio();
             checkOption(btn, wordChoice, q.word);
           });
@@ -1083,11 +1090,12 @@
       }
     }
 
-    // 將現有的所有選項設為鎖定或解鎖
+    // 將現有的所有選項按鈕直接設定 disabled
     function setOptionsLocked(locked) {
       isShuffling = locked;
       var optionBtns = document.querySelectorAll('.word-option-btn');
       optionBtns.forEach(function(btn) {
+        btn.disabled = locked;
         if (locked) {
           btn.classList.add('locked');
         } else {
@@ -1186,7 +1194,7 @@
     }
 
     function checkOption(btn, selectedWord, targetWord) {
-      // 若已答對或正處於答錯洗牌鎖定中，拒絕點擊
+      // 雙重驗證：若已答對或正處於洗牌鎖定狀態，絕不處理點擊！
       if (isAnswered || isShuffling) return;
 
       if (selectedWord === targetWord) {
@@ -1196,7 +1204,7 @@
         wrongAttempts++;
         btn.classList.add('wrong');
         
-        // 1. 立即鎖定所有選項按鈕，不允許在未重新打亂前選擇
+        // 1. 立即啟動全局鎖定，並將當前按鈕設定 disabled
         setOptionsLocked(true);
 
         updateMascot("💪", "再試一次喔！");
@@ -1208,11 +1216,11 @@
         
         speakText("Try again!");
 
-        // 2. 經過 0.7 秒警示後，重新打亂選項位置並解除鎖定！
+        // 2. 延遲 0.8 秒給予警示後，重新打亂選項位置並解鎖按鈕！
         setTimeout(function() {
-          renderChoiceOptions(false); // 洗牌並重新渲染解鎖按鈕
+          renderChoiceOptions(false);
           setOptionsLocked(false);
-        }, 700);
+        }, 800);
       }
     }
 
